@@ -1,3 +1,8 @@
+/* ==========================================
+   GEOMASTER WEB APP STYLESHEET
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
 
 * {
     margin: 0;
@@ -6,39 +11,58 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #10152e, #202b55);
-    color: white;
+    font-family: 'Outfit', Arial, sans-serif;
+    background: radial-gradient(circle at top, #18224c 0%, #0d1226 100%);
+    color: #f1f5f9;
     min-height: 100vh;
-    padding: 25px 15px;
+    padding: 30px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .app {
-    max-width: 850px;
+    width: 100%;
+    max-width: 820px;
     margin: auto;
 }
 
+/* App Header */
 header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 header h1 {
     font-size: 42px;
-    color: #65e8c0;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #43d9a3;
+    text-shadow: 0 0 25px rgba(67, 217, 163, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 header p {
-    color: #b7c5e8;
-    margin-top: 8px;
+    color: #94a3b8;
+    margin-top: 6px;
+    font-size: 15px;
+    font-weight: 500;
 }
 
+/* Glass Panels */
 .panel {
-    background: #202b49;
-    padding: 30px;
-    border-radius: 22px;
-    box-shadow: 0 12px 35px #0005;
-    margin-bottom: 20px;
+    background: rgba(26, 36, 71, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 32px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    margin-bottom: 24px;
+    transition: transform 0.3s ease;
 }
 
 .hidden {
@@ -48,99 +72,157 @@ header p {
 h2 {
     text-align: center;
     margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: -0.3px;
 }
 
+/* Region Filter Selector */
 .regions {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 25px;
+    gap: 10px;
+    margin-bottom: 28px;
 }
 
 .regions label {
-    background: #303e62;
-    padding: 12px;
-    border-radius: 10px;
+    background: #233263;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.regions label:hover {
+    background: #2b3e7d;
+    border-color: rgba(67, 217, 163, 0.3);
+}
+
+.regions input[type="checkbox"] {
+    accent-color: #43d9a3;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
 }
 
+/* Game Mode Grid */
 .mode-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
 }
 
+/* Base Buttons */
 button {
     border: none;
-    padding: 16px;
-    border-radius: 12px;
-    background: #536dfe;
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
     color: white;
-    font-size: 16px;
-    font-weight: bold;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: .2s;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 button:hover {
-    transform: translateY(-3px);
-    filter: brightness(1.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+    filter: brightness(1.05);
 }
 
-.time-button {
-    background: linear-gradient(135deg, #ff7043, #e83e75);
+button:active {
+    transform: translateY(1px);
 }
 
+/* Rank Panel */
 .rank-panel {
     margin-top: 30px;
     text-align: center;
-    background: #303e62;
-    padding: 20px;
-    border-radius: 15px;
+    background: rgba(22, 30, 58, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 22px;
+    border-radius: 18px;
+}
+
+.rank-panel h3 {
+    font-size: 20px;
+    color: #43d9a3;
+    margin-bottom: 4px;
 }
 
 .rank-panel p {
-    margin: 10px;
+    color: #94a3b8;
+    font-size: 14px;
+    margin: 8px 0;
 }
 
 .xp-track, .progress-track {
     height: 10px;
-    background: #10182e;
+    background: #0d1226;
     border-radius: 20px;
     overflow: hidden;
+    margin: 12px 0 6px 0;
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 #xpProgress, #questionProgress {
     height: 100%;
     width: 0%;
-    background: #43d9a3;
-    transition: width .3s;
+    background: linear-gradient(90deg, #38ef7d, #11998e);
+    border-radius: 20px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Game Interface Stats */
 .game-stats {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 20px;
-    font-weight: bold;
+    margin-bottom: 24px;
+    font-weight: 600;
+    font-size: 15px;
+    background: rgba(15, 23, 42, 0.4);
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 #timerBox {
-    color: #ff886c;
-    font-size: 21px;
+    color: #ff9f43;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 #timerBox.danger {
-    color: #ff4040;
-    animation: pulse .5s infinite alternate;
+    color: #ff5252;
+    animation: pulse 0.5s infinite alternate;
 }
 
 @keyframes pulse {
-    to { transform: scale(1.12); }
+    to { transform: scale(1.1); }
 }
 
+/* Flag & Map Element Presentation */
 #flag {
     display: flex;
     justify-content: center;
@@ -151,91 +233,135 @@ button:hover {
     width: 220px;
     max-width: 100%;
     border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 #countryMap {
     display: none;
     justify-content: center;
-    margin: 20px auto;
-    max-width: 100%;
-    overflow: hidden;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 20px;
+    border-radius: 14px;
+    margin: 20px 0;
+    min-height: 180px;
 }
 
-#countryMap svg {
-    width: 100%;
-    max-width: 600px;
-    height: auto;
-}
 
-.map-loading {
-    padding: 25px;
-    text-align: center;
-}
 
 #question {
-    margin: 25px 0;
+    margin: 20px 0 25px 0;
     text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: #f1f5f9;
 }
 
+/* Options Grid */
 .options {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+    margin-bottom: 20px;
 }
 
 .option {
-    min-height: 65px;
-    background: #384a70;
+    min-height: 64px;
+    background: rgba(38, 51, 92, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.option:hover:not(:disabled) {
+    background: rgba(50, 68, 122, 0.8);
+    border-color: rgba(79, 70, 229, 0.4);
 }
 
 .option.correct {
-    background: #159c70;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    border-color: #34d399;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
 }
 
 .option.incorrect {
-    background: #d94359;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+    border-color: #f87171;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
 }
 
 .option:disabled {
     cursor: not-allowed;
-    opacity: 1;
+    opacity: 0.9;
 }
 
 #feedback {
     text-align: center;
-    margin: 20px 0;
-    min-height: 25px;
+    margin: 16px 0;
+    min-height: 24px;
+    font-weight: 600;
+    font-size: 16px;
 }
 
+/* Utility Buttons */
 .next-button {
     display: none;
-    background: #159c70;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
     width: 100%;
     margin-bottom: 12px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
 }
 
 .back-button {
     width: 100%;
-    background: #45516d;
+    background: rgba(51, 65, 85, 0.7);
+    box-shadow: none;
 }
 
+.back-button:hover {
+    background: rgba(71, 85, 105, 0.9);
+}
+
+/* Result Screen */
 #result {
     text-align: center;
 }
 
+#result h2 {
+    font-size: 26px;
+}
+
 #result h1 {
-    color: #65e8c0;
-    font-size: 55px;
-    margin: 20px;
+    color: #43d9a3;
+    font-size: 52px;
+    font-weight: 800;
+    margin: 15px 0;
+    text-shadow: 0 0 30px rgba(67, 217, 163, 0.3);
+}
+
+#result p {
+    color: #94a3b8;
+    font-size: 15px;
+    margin: 8px 0;
 }
 
 #result button {
-    margin: 10px;
+    margin: 10px auto;
+    width: 100%;
+    max-width: 320px;
 }
 
+/* Responsive Scaling */
 @media(max-width: 550px) {
+    body {
+        padding: 15px 10px;
+    }
+
     .panel {
-        padding: 18px;
+        padding: 20px;
+        border-radius: 20px;
     }
 
     .mode-grid, .options {
@@ -247,6 +373,6 @@ button:hover {
     }
 
     .game-stats {
-        font-size: 14px;
+        font-size: 13px;
     }
 }

@@ -1,102 +1,100 @@
 const countries = [
-     // EUROPE
-    {n:"Albania",c:"Tirana",f:"🇦🇱",r:"Europe"},
-    {n:"Andorra",c:"Andorra la Vella",f:"🇦🇩",r:"Europe"},
-    {n:"Austria",c:"Vienna",f:"🇦🇹",r:"Europe"},
-    {n:"Belarus",c:"Minsk",f:"🇧🇾",r:"Europe"},
-    {n:"Belgium",c:"Brussels",f:"🇧🇪",r:"Europe"},
-    {n:"Bosnia and Herzegovina",c:"Sarajevo",f:"🇧🇦",r:"Europe"},
-    {n:"Bulgaria",c:"Sofia",f:"🇧🇬",r:"Europe"},
-    {n:"Croatia",c:"Zagreb",f:"🇭🇷",r:"Europe"},
-    {n:"Cyprus",c:"Nicosia",f:"🇨🇾",r:"Europe"},
-    {n:"Czechia",c:"Prague",f:"🇨🇿",r:"Europe"},
-    {n:"Denmark",c:"Copenhagen",f:"🇩🇰",r:"Europe"},
-    {n:"Estonia",c:"Tallinn",f:"🇪🇪",r:"Europe"},
-    {n:"Finland",c:"Helsinki",f:"🇫🇮",r:"Europe"},
-    {n:"France",c:"Paris",f:"🇫🇷",r:"Europe"},
-    {n:"Germany",c:"Berlin",f:"🇩🇪",r:"Europe"},
-    {n:"Greece",c:"Athens",f:"🇬🇷",r:"Europe"},
-    {n:"Hungary",c:"Budapest",f:"🇭🇺",r:"Europe"},
-    {n:"Iceland",c:"Reykjavik",f:"🇮🇸",r:"Europe"},
-    {n:"Ireland",c:"Dublin",f:"🇮🇪",r:"Europe"},
-    {n:"Italy",c:"Rome",f:"🇮🇹",r:"Europe"},
-    {n:"Kosovo",c:"Pristina",f:"🇽🇰",r:"Europe"},
-    {n:"Latvia",c:"Riga",f:"🇱🇻",r:"Europe"},
-    {n:"Liechtenstein",c:"Vaduz",f:"🇱🇮",r:"Europe"},
-    {n:"Lithuania",c:"Vilnius",f:"🇱🇹",r:"Europe"},
-    {n:"Luxembourg",c:"Luxembourg",f:"🇱🇺",r:"Europe"},
-    {n:"Malta",c:"Valletta",f:"🇲🇹",r:"Europe"},
-    {n:"Moldova",c:"Chisinau",f:"🇲🇩",r:"Europe"},
-    {n:"Monaco",c:"Monaco",f:"🇲🇨",r:"Europe"},
-    {n:"Montenegro",c:"Podgorica",f:"🇲🇪",r:"Europe"},
-    {n:"Netherlands",c:"Amsterdam",f:"🇳🇱",r:"Europe"},
-    {n:"North Macedonia",c:"Skopje",f:"🇲🇰",r:"Europe"},
-    {n:"Norway",c:"Oslo",f:"🇳🇴",r:"Europe"},
-    {n:"Poland",c:"Warsaw",f:"🇵🇱",r:"Europe"},
-    {n:"Portugal",c:"Lisbon",f:"🇵🇹",r:"Europe"},
-    {n:"Romania",c:"Bucharest",f:"🇷🇴",r:"Europe"},
-    {n:"Russia",c:"Moscow",f:"🇷🇺",r:"Europe"},
-    {n:"San Marino",c:"San Marino",f:"🇸🇲",r:"Europe"},
-    {n:"Serbia",c:"Belgrade",f:"🇷🇸",r:"Europe"},
-    {n:"Slovakia",c:"Bratislava",f:"🇸🇰",r:"Europe"},
-    {n:"Slovenia",c:"Ljubljana",f:"🇸🇮",r:"Europe"},
-    {n:"Spain",c:"Madrid",f:"🇪🇸",r:"Europe"},
-    {n:"Sweden",c:"Stockholm",f:"🇸🇪",r:"Europe"},
-    {n:"Switzerland",c:"Bern",f:"🇨🇭",r:"Europe"},
-    {n:"Ukraine",c:"Kyiv",f:"🇺🇦",r:"Europe"},
-    {n:"United Kingdom",c:"London",f:"🇬🇧",r:"Europe"},
-    {n:"Vatican City",c:"Vatican City",f:"🇻🇦",r:"Europe"},
+    // EUROPE
+    {n:"Albania",c:"Tirana",f:"🇦🇱",r:"Europe",code:"al"},
+    {n:"Andorra",c:"Andorra la Vella",f:"🇦🇩",r:"Europe",code:"ad"},
+    {n:"Austria",c:"Vienna",f:"🇦🇹",r:"Europe",code:"at"},
+    {n:"Belarus",c:"Minsk",f:"🇧🇾",r:"Europe",code:"by"},
+    {n:"Belgium",c:"Brussels",f:"🇧🇪",r:"Europe",code:"be"},
+    {n:"Bosnia and Herzegovina",c:"Sarajevo",f:"🇧🇦",r:"Europe",code:"ba"},
+    {n:"Bulgaria",c:"Sofia",f:"🇧🇬",r:"Europe",code:"bg"},
+    {n:"Croatia",c:"Zagreb",f:"🇭🇷",r:"Europe",code:"hr"},
+    {n:"Cyprus",c:"Nicosia",f:"🇨🇾",r:"Europe",code:"cy"},
+    {n:"Czechia",c:"Prague",f:"🇨🇿",r:"Europe",code:"cz"},
+    {n:"Denmark",c:"Copenhagen",f:"🇩🇰",r:"Europe",code:"dk"},
+    {n:"Estonia",c:"Tallinn",f:"🇪🇪",r:"Europe",code:"ee"},
+    {n:"Finland",c:"Helsinki",f:"🇫🇮",r:"Europe",code:"fi"},
+    {n:"France",c:"Paris",f:"🇫🇷",r:"Europe",code:"fr"},
+    {n:"Germany",c:"Berlin",f:"🇩🇪",r:"Europe",code:"de"},
+    {n:"Greece",c:"Athens",f:"🇬🇷",r:"Europe",code:"gr"},
+    {n:"Hungary",c:"Budapest",f:"🇭🇺",r:"Europe",code:"hu"},
+    {n:"Iceland",c:"Reykjavik",f:"🇮🇸",r:"Europe",code:"is"},
+    {n:"Ireland",c:"Dublin",f:"🇮🇪",r:"Europe",code:"ie"},
+    {n:"Italy",c:"Rome",f:"🇮🇹",r:"Europe",code:"it"},
+    {n:"Kosovo",c:"Pristina",f:"🇽🇰",r:"Europe",code:"xk"},
+    {n:"Latvia",c:"Riga",f:"🇱🇻",r:"Europe",code:"lv"},
+    {n:"Liechtenstein",c:"Vaduz",f:"🇱🇮",r:"Europe",code:"li"},
+    {n:"Lithuania",c:"Vilnius",f:"🇱🇹",r:"Europe",code:"lt"},
+    {n:"Luxembourg",c:"Luxembourg",f:"🇱🇺",r:"Europe",code:"lu"},
+    {n:"Malta",c:"Valletta",f:"🇲🇹",r:"Europe",code:"mt"},
+    {n:"Moldova",c:"Chisinau",f:"🇲🇩",r:"Europe",code:"md"},
+    {n:"Monaco",c:"Monaco",f:"🇲🇨",r:"Europe",code:"mc"},
+    {n:"Montenegro",c:"Podgorica",f:"🇲🇪",r:"Europe",code:"me"},
+    {n:"Netherlands",c:"Amsterdam",f:"🇳🇱",r:"Europe",code:"nl"},
+    {n:"North Macedonia",c:"Skopje",f:"🇲🇰",r:"Europe",code:"mk"},
+    {n:"Norway",c:"Oslo",f:"🇳🇴",r:"Europe",code:"no"},
+    {n:"Poland",c:"Warsaw",f:"🇵🇱",r:"Europe",code:"pl"},
+    {n:"Portugal",c:"Lisbon",f:"🇵🇹",r:"Europe",code:"pt"},
+    {n:"Romania",c:"Bucharest",f:"🇷🇴",r:"Europe",code:"ro"},
+    {n:"Russia",c:"Moscow",f:"🇷🇺",r:"Europe",code:"ru"},
+    {n:"San Marino",c:"San Marino",f:"🇸🇲",r:"Europe",code:"sm"},
+    {n:"Serbia",c:"Belgrade",f:"🇷🇸",r:"Europe",code:"rs"},
+    {n:"Slovakia",c:"Bratislava",f:"🇸🇰",r:"Europe",code:"sk"},
+    {n:"Slovenia",c:"Ljubljana",f:"🇸🇮",r:"Europe",code:"si"},
+    {n:"Spain",c:"Madrid",f:"🇪🇸",r:"Europe",code:"es"},
+    {n:"Sweden",c:"Stockholm",f:"🇸🇪",r:"Europe",code:"se"},
+    {n:"Switzerland",c:"Bern",f:"🇨🇭",r:"Europe",code:"ch"},
+    {n:"Ukraine",c:"Kyiv",f:"🇺🇦",r:"Europe",code:"ua"},
+    {n:"United Kingdom",c:"London",f:"🇬🇧",r:"Europe",code:"gb"},
+    {n:"Vatican City",c:"Vatican City",f:"🇻🇦",r:"Europe",code:"va"},
 
     // ASIA
-    {n:"Afghanistan",c:"Kabul",f:"🇦🇫",r:"Asia"},
-    {n:"Armenia",c:"Yerevan",f:"🇦🇲",r:"Asia"},
-    {n:"Azerbaijan",c:"Baku",f:"🇦🇿",r:"Asia"},
-    {n:"Bahrain",c:"Manama",f:"🇧🇭",r:"Asia"},
-    {n:"Bangladesh",c:"Dhaka",f:"🇧🇩",r:"Asia"},
-    {n:"Bhutan",c:"Thimphu",f:"🇧🇹",r:"Asia"},
-    {n:"Brunei",c:"Bandar Seri Begawan",f:"🇧🇳",r:"Asia"},
-    {n:"Cambodia",c:"Phnom Penh",f:"🇰🇭",r:"Asia"},
-    {n:"China",c:"Beijing",f:"🇨🇳",r:"Asia"},
-    {n:"Georgia",c:"Tbilisi",f:"🇬🇪",r:"Asia"},
-    {n:"India",c:"New Delhi",f:"🇮🇳",r:"Asia"},
-    {n:"Indonesia",c:"Jakarta",f:"🇮🇩",r:"Asia"},
-    {n:"Iran",c:"Tehran",f:"🇮🇷",r:"Asia"},
-    {n:"Iraq",c:"Baghdad",f:"🇮🇶",r:"Asia"},
-    {n:"Israel",c:"Jerusalem",f:"🇮🇱",r:"Asia"},
-    {n:"Japan",c:"Tokyo",f:"🇯🇵",r:"Asia"},
-    {n:"Jordan",c:"Amman",f:"🇯🇴",r:"Asia"},
-    {n:"Kazakhstan",c:"Astana",f:"🇰🇿",r:"Asia"},
-    {n:"Kuwait",c:"Kuwait City",f:"🇰🇼",r:"Asia"},
-    {n:"Kyrgyzstan",c:"Bishkek",f:"🇰🇬",r:"Asia"},
-    {n:"Laos",c:"Vientiane",f:"🇱🇦",r:"Asia"},
-    {n:"Lebanon",c:"Beirut",f:"🇱🇧",r:"Asia"},
-    {n:"Malaysia",c:"Kuala Lumpur",f:"🇲🇾",r:"Asia"},
-    {n:"Maldives",c:"Male",f:"🇲🇻",r:"Asia"},
-    {n:"Mongolia",c:"Ulaanbaatar",f:"🇲🇳",r:"Asia"},
-    {n:"Myanmar",c:"Naypyidaw",f:"🇲🇲",r:"Asia"},
-    {n:"Nepal",c:"Kathmandu",f:"🇳🇵",r:"Asia"},
-    {n:"North Korea",c:"Pyongyang",f:"🇰🇵",r:"Asia"},
-    {n:"Oman",c:"Muscat",f:"🇴🇲",r:"Asia"},
-    {n:"Pakistan",c:"Islamabad",f:"🇵🇰",r:"Asia"},
-    {n:"Philippines",c:"Manila",f:"🇵🇭",r:"Asia"},
-    {n:"Qatar",c:"Doha",f:"🇶🇦",r:"Asia"},
-    {n:"Saudi Arabia",c:"Riyadh",f:"🇸🇦",r:"Asia"},
-    {n:"Singapore",c:"Singapore",f:"🇸🇬",r:"Asia"},
-    {n:"South Korea",c:"Seoul",f:"🇰🇷",r:"Asia"},
-    {n:"Sri Lanka",c:"Sri Jayawardenepura Kotte",f:"🇱🇰",r:"Asia"},
-    {n:"Syria",c:"Damascus",f:"🇸🇾",r:"Asia"},
-    {n:"Tajikistan",c:"Dushanbe",f:"🇹🇯",r:"Asia"},
-    {n:"Thailand",c:"Bangkok",f:"🇹🇭",r:"Asia"},
-    {n:"Timor-Leste",c:"Dili",f:"🇹🇱",r:"Asia"},
-    {n:"Turkey",c:"Ankara",f:"🇹🇷",r:"Asia"},
-    {n:"Turkmenistan",c:"Ashgabat",f:"🇹🇲",r:"Asia"},
-    {n:"United Arab Emirates",c:"Abu Dhabi",f:"🇦🇪",r:"Asia"},
-    {n:"Uzbekistan",c:"Tashkent",f:"🇺🇿",r:"Asia"},
-    {n:"Vietnam",c:"Hanoi",f:"🇻🇳",r:"Asia"},
-    {n:"Yemen",c:"Sanaa",f:"🇾🇪",r:"Asia"},
+    {n:"Afghanistan",c:"Kabul",f:"🇦🇫",r:"Asia",code:"af"},
+    {n:"Armenia",c:"Yerevan",f:"🇦🇲",r:"Asia",code:"am"},
+    {n:"Azerbaijan",c:"Baku",f:"🇦🇿",r:"Asia",code:"az"},
+    {n:"Bahrain",c:"Manama",f:"🇧🇭",r:"Asia",code:"bh"},
+    {n:"Bangladesh",c:"Dhaka",f:"🇧🇩",r:"Asia",code:"bd"},
+    {n:"Bhutan",c:"Thimphu",f:"🇧🇹",r:"Asia",code:"bt"},
+    {n:"Brunei",c:"Bandar Seri Begawan",f:"🇧🇳",r:"Asia",code:"bn"},
+    {n:"Cambodia",c:"Phnom Penh",f:"🇰🇭",r:"Asia",code:"kh"},
+    {n:"China",c:"Beijing",f:"🇨🇳",r:"Asia",code:"cn"},
+    {n:"Georgia",c:"Tbilisi",f:"🇬🇪",r:"Asia",code:"ge"},
+    {n:"India",c:"New Delhi",f:"🇮🇳",r:"Asia",code:"in"},
+    {n:"Indonesia",c:"Jakarta",f:"🇮🇩",r:"Asia",code:"id"},
+    {n:"Iran",c:"Tehran",f:"🇮🇷",r:"Asia",code:"ir"},
+    {n:"Iraq",c:"Baghdad",f:"🇮🇶",r:"Asia",code:"iq"},
+    {n:"Israel",c:"Jerusalem",f:"🇮🇱",r:"Asia",code:"il"},
+    {n:"Japan",c:"Tokyo",f:"🇯🇵",r:"Asia",code:"jp"},
+    {n:"Jordan",c:"Amman",f:"🇯🇴",r:"Asia",code:"jo"},
+    {n:"Kazakhstan",c:"Astana",f:"🇰🇿",r:"Asia",code:"kz"},
+    {n:"Kuwait",c:"Kuwait City",f:"🇰🇼",r:"Asia",code:"kw"},
+    {n:"Kyrgyzstan",c:"Bishkek",f:"🇰🇬",r:"Asia",code:"kg"},
+    {n:"Laos",c:"Vientiane",f:"🇱🇦",r:"Asia",code:"la"},
+    {n:"Lebanon",c:"Beirut",f:"🇱🇧",r:"Asia",code:"lb"},
+    {n:"Malaysia",c:"Kuala Lumpur",f:"🇲🇾",r:"Asia",code:"my"},
+    {n:"Maldives",c:"Male",f:"🇲🇻",r:"Asia",code:"mv"},
+    {n:"Mongolia",c:"Ulaanbaatar",f:"🇲🇳",r:"Asia",code:"mn"},
+    {n:"Myanmar",c:"Naypyidaw",f:"🇲🇲",r:"Asia",code:"mm"},
+    {n:"Nepal",c:"Kathmandu",f:"🇳🇵",r:"Asia",code:"np"},
+    {n:"North Korea",c:"Pyongyang",f:"🇰🇵",r:"Asia",code:"kp"},
+    {n:"Oman",c:"Muscat",f:"🇴🇲",r:"Asia",code:"om"},
+    {n:"Pakistan",c:"Islamabad",f:"🇵🇰",r:"Asia",code:"pk"},
+    {n:"Philippines",c:"Manila",f:"🇵🇭",r:"Asia",code:"ph"},
+    {n:"Qatar",c:"Doha",f:"🇶🇦",r:"Asia",code:"qa"},
+    {n:"Saudi Arabia",c:"Riyadh",f:"🇸🇦",r:"Asia",code:"sa"},
+    {n:"Singapore",c:"Singapore",f:"🇸🇬",r:"Asia",code:"sg"},
+    {n:"South Korea",c:"Seoul",f:"🇰🇷",r:"Asia",code:"kr"},
+    {n:"Sri Lanka",c:"Sri Jayawardenepura Kotte",f:"🇱🇰",r:"Asia",code:"lk"},
+    {n:"Syria",c:"Damascus",f:"🇸🇾",r:"Asia",code:"sy"},
+    {n:"Tajikistan",c:"Dushanbe",f:"🇹🇯",r:"Asia",code:"tj"},
+    {n:"Thailand",c:"Bangkok",f:"🇹🇭",r:"Asia",code:"th"},
+    {n:"Timor-Leste",c:"Dili",f:"🇹🇱",r:"Asia",code:"tl"},
+    {n:"Turkey",c:"Ankara",f:"🇹🇷",r:"Asia",code:"tr"},
+    {n:"Turkmenistan",c:"Ashgabat",f:"🇹🇲",r:"Asia",code:"tm"},
+    {n:"United Arab Emirates",c:"Abu Dhabi",f:"🇦🇪",r:"Asia",code:"ae"},
+    {n:"Uzbekistan",c:"Tashkent",f:"🇺🇿",r:"Asia",code:"uz"},
+    {n:"Vietnam",c:"Hanoi",f:"🇻🇳",r:"Asia",code:"vn"},
+    {n:"Yemen",c:"Sanaa",f:"🇾🇪",r:"Asia",code:"ye"},
 
-    
-    
     // NORTH AMERICA
     {n:"Antigua and Barbuda",c:"Saint John's",f:"🇦🇬",r:"North America",code:"ag"},
     {n:"Bahamas",c:"Nassau",f:"🇧🇸",r:"North America",code:"bs"},
@@ -193,9 +191,8 @@ const countries = [
     {n:"Zimbabwe",c:"Harare",f:"🇿🇼",r:"Africa",code:"zw"}
 ];
 
-
 // ==========================================
-// PART 1 - VARIABLES AND XP SYSTEM
+// GAME STATE & VARIABLES
 // ==========================================
 
 let currentMode = "";
@@ -205,13 +202,12 @@ let correctCountry = null;
 let answered = false;
 let timeLeft = 30;
 let timerInterval = null;
-
-
+let mapRequestNumber = 0;
 let selectedCountries = [];
 let questionDeck = [];
+let gameOver = false;
 
 const questionLimit = 10;
-
 let xp = Number(localStorage.getItem("geoMasterXP")) || 0;
 
 const ranks = [
@@ -227,70 +223,8 @@ const ranks = [
     {name:"GeoMaster",xp:10000,icon:"💎"}
 ];
 
-
-let gameOver = false;
-
-function getRank() {
-    return [...ranks].reverse().find(r => xp >= r.xp);
-}
-
-function addXP(amount) {
-    const oldRank = getRank();
-
-    xp += amount;
-    localStorage.setItem("geoMasterXP", xp);
-
-    const newRank = getRank();
-
-    updateXPDisplay();
-
-    if (oldRank.name !== newRank.name) {
-        alert("🎉 RANK UP!\n\n" + newRank.icon + " " + newRank.name);
-    }
-}
-
-function updateXPDisplay() {
-    const rank = getRank();
-    const nextRank = ranks.find(r => r.xp > xp);
-
-    document.getElementById("totalXP").textContent = xp;
-    document.getElementById("currentRank").textContent =
-        rank.icon + " " + rank.name;
-
-    document.getElementById("xpProgress").style.width =
-        (nextRank
-            ? ((xp - rank.xp) / (nextRank.xp - rank.xp)) * 100
-            : 100) + "%";
-
-    document.getElementById("nextRank").textContent =
-        nextRank
-            ? (nextRank.xp - xp) + " XP until " + nextRank.name
-            : "MAX RANK REACHED!";
-}
-
-function shuffle(array) {
-    const result = [...array];
-
-    for (let i = result.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [result[i], result[j]] = [result[j], result[i]];
-    }
-
-    return result;
-}
-
-function getRandomOptions(correct) {
-    const wrong = shuffle(
-        selectedCountries.filter(c => c.n !== correct.n)
-    ).slice(0, 3);
-
-    return shuffle([correct, ...wrong]);
-}
-
-
-
 // ==========================================
-// PART 2 - XP AND HELPER FUNCTIONS
+// XP & RANK SYSTEM
 // ==========================================
 
 function getRank() {
@@ -299,11 +233,8 @@ function getRank() {
 
 function addXP(amount) {
     const oldRank = getRank();
-
     xp = Math.max(0, xp + amount);
-
     localStorage.setItem("geoMasterXP", xp);
-
     const newRank = getRank();
 
     updateXPDisplay();
@@ -323,16 +254,12 @@ function updateXPDisplay() {
     const next = document.getElementById("nextRank");
 
     if (totalXP) totalXP.textContent = xp;
-
-    if (currentRank) {
-        currentRank.textContent = rank.icon + " " + rank.name;
-    }
+    if (currentRank) currentRank.textContent = rank.icon + " " + rank.name;
 
     if (progress) {
         const percentage = nextRank
             ? ((xp - rank.xp) / (nextRank.xp - rank.xp)) * 100
             : 100;
-
         progress.style.width = percentage + "%";
     }
 
@@ -343,14 +270,16 @@ function updateXPDisplay() {
     }
 }
 
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
+
 function shuffle(array) {
     const result = [...array];
-
     for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [result[i], result[j]] = [result[j], result[i]];
     }
-
     return result;
 }
 
@@ -358,13 +287,62 @@ function getRandomOptions(correct) {
     const wrongAnswers = shuffle(
         selectedCountries.filter(c => c.n !== correct.n)
     ).slice(0, 3);
-
     return shuffle([correct, ...wrongAnswers]);
 }
 
+function showCountryMap(country) {
+    const mapContainer = document.getElementById("countryMap");
+    mapContainer.style.display = "flex";
+    
+    // Primary source using your current implementation
+    const primaryUrl = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${country.code}/vector.svg`;
+    
+    mapContainer.innerHTML = `
+        <img 
+            id="dynamicMapImg"
+            src="${primaryUrl}" 
+            alt="Outline of ${country.n}"
+            style="max-width: 160px; max-height: 140px; width: auto; height: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));"
+            onerror="handleMapError(this, '${country.code}', '${country.n}')"
+        >
+    `;
+}
 
+// Fallback handler if a specific vector file fails to load
+function showCountryMap(country) {
+    const mapContainer = document.getElementById("countryMap");
+    mapContainer.style.display = "flex";
+    
+    
+    let mapUrl = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${country.code}/vector.svg`;
+    
+    if (country.code === 'xk') {
+        mapUrl = `https://upload.wikimedia.org/wikipedia/commons/e/e0/Kosovo_in_Europe_%28zoomed%29.svg`;
+    }
+    
+    mapContainer.innerHTML = `
+        <img 
+            src="${mapUrl}" 
+            alt="Outline of ${country.n}"
+            style="max-width: 160px; max-height: 140px; width: auto; height: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));"
+            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'font-size:14px; color:#cbd5e1; text-align:center; padding:10px;\\'>🗺️ ${country.n} Outline Map</div>';"
+        >
+    `;
+
+    if (country.code === 'xk') {
+    mapUrl = `https://upload.wikimedia.org/wikipedia/commons/e/e0/Kosovo_in_Europe_%28zoomed%29.svg`;
+}
+}
+
+function showTextFallback(imgElement, countryName) {
+    imgElement.parentElement.innerHTML = `
+        <div style="font-size: 14px; color: #cbd5e1; text-align: center; padding: 20px;">
+            🗺️ Map outline for <strong>${countryName}</strong>
+        </div>
+    `;
+}
 // ==========================================
-// PART 3 - START GAME AND TIMER
+// GAME ENGINE & TIMERS
 // ==========================================
 
 function startGame(gameMode) {
@@ -385,12 +363,10 @@ function startGame(gameMode) {
         return;
     }
 
-    selectedCountries = countries.filter(c =>
-        regions.includes(c.r)
-    );
+    selectedCountries = countries.filter(c => regions.includes(c.r));
 
     if (selectedCountries.length < 4) {
-        alert("Select more continents!");
+        alert("Select more continents or ensure at least 4 countries are available!");
         return;
     }
 
@@ -420,7 +396,6 @@ function startGame(gameMode) {
 
 function startTimer() {
     stopTimer();
-
     timerInterval = setInterval(() => {
         if (gameOver) {
             stopTimer();
@@ -446,10 +421,8 @@ function stopTimer() {
 function updateTimer() {
     const timer = document.getElementById("timer");
     const box = document.getElementById("timerBox");
-
-    timer.textContent = timeLeft;
-
-    box.classList.toggle("danger", timeLeft <= 10);
+    if (timer) timer.textContent = timeLeft;
+    if (box) box.classList.toggle("danger", timeLeft <= 10);
 }
 
 function nextQuestion() {
@@ -459,7 +432,6 @@ function nextQuestion() {
     }
 
     answered = false;
-
     correctCountry = questionDeck[questionNumber - 1];
 
     document.getElementById("score").textContent = score;
@@ -473,7 +445,6 @@ function nextQuestion() {
 
     flagElement.style.display = "flex";
     flagElement.innerHTML = "";
-
     mapContainer.style.display = "none";
     mapContainer.innerHTML = "";
 
@@ -484,93 +455,95 @@ function nextQuestion() {
 
     document.getElementById("next").style.display = "none";
 
-    // Choose question type
     const randomModes = ["flag", "capital", "country", "map"];
-
     currentMode = mode;
 
     if (mode === "random" || mode === "timeAttack") {
-        currentMode = randomModes[
-            Math.floor(Math.random() * randomModes.length)
-        ];
+        currentMode = randomModes[Math.floor(Math.random() * randomModes.length)];
     }
 
-    // Generate answers
     const options = getRandomOptions(correctCountry);
 
-    // FLAG QUESTION
     if (currentMode === "flag") {
-
         flagElement.style.display = "flex";
-
         flagElement.innerHTML = `
             <img
                 src="https://flagcdn.com/w320/${correctCountry.code}.png"
                 alt="${correctCountry.n} flag"
-                style="width:220px;max-width:100%;border-radius:12px;"
             >
         `;
-
-        questionElement.textContent =
-            "Which country does this flag belong to?";
-    }
-
-    // CAPITAL QUESTION
-    else if (currentMode === "capital") {
-
-        questionElement.textContent =
-            "What is the capital of " + correctCountry.n + "?";
-    }
-
-    // COUNTRY QUESTION
-    else if (currentMode === "country") {
-
-        questionElement.textContent =
-            "This country is in " + correctCountry.r +
-            ". Its capital is " + correctCountry.c +
-            ". Which country is it?";
-    }
-
-    // MAP QUESTION
-    else if (currentMode === "map") {
-
+        questionElement.textContent = "Which country does this flag belong to?";
+    } else if (currentMode === "capital") {
         flagElement.style.display = "none";
-
-        questionElement.textContent =
-            "Which country is shown on the map?";
-
+        questionElement.textContent = "What is the capital of " + correctCountry.n + "?";
+    } else if (currentMode === "country") {
+        flagElement.style.display = "none";
+        questionElement.textContent = "This country is in " + correctCountry.r + ". Its capital is " + correctCountry.c + ". Which country is it?";
+    } else if (currentMode === "map") {
+        flagElement.style.display = "none";
+        questionElement.textContent = "Which country is shown on the map?";
         showCountryMap(correctCountry);
     }
 
-    // CREATE ANSWER BUTTONS
     options.forEach(country => {
-
         const button = document.createElement("button");
-
         button.className = "option";
-
-        button.textContent =
-            currentMode === "capital"
-                ? country.c
-                : country.n;
-
+        button.textContent = (currentMode === "capital") ? country.c : country.n;
         button.addEventListener("click", () => {
             checkAnswer(country, button);
         });
-
         optionsElement.appendChild(button);
     });
 }
 
+function checkAnswer(selectedCountry, buttonElement) {
+    if (answered) return;
+    answered = true;
 
-// ==========================================
-// PART 4 - ANSWERS AND RESULTS
-// ==========================================
+    const allButtons = document.querySelectorAll(".options button");
+    allButtons.forEach(btn => btn.disabled = true);
 
+    const isCorrect = selectedCountry.n === correctCountry.n;
+    const feedback = document.getElementById("feedback");
+
+    if (isCorrect) {
+        buttonElement.classList.add("correct");
+        score++;
+        feedback.textContent = "✅ Correct! +10 XP";
+        feedback.style.color = "#34d399";
+        addXP(10);
+        if (mode === "timeAttack") {
+            timeLeft += 5; // Bonus time
+        }
+    } else {
+        buttonElement.classList.add("incorrect");
+        feedback.textContent = `❌ Wrong! The correct answer was ${currentMode === "capital" ? correctCountry.c : correctCountry.n}.`;
+        feedback.style.color = "#f87171";
+        addXP(-5);
+
+        // Highlight correct answer
+        allButtons.forEach(btn => {
+            if (btn.textContent === (currentMode === "capital" ? correctCountry.c : correctCountry.n)) {
+                btn.classList.add("correct");
+            }
+        });
+    }
+
+    document.getElementById("score").textContent = score;
+
+    if (mode === "timeAttack") {
+        questionNumber++;
+        setTimeout(() => {
+            if (!gameOver) nextQuestion();
+        }, 1200);
+    } else {
+        document.getElementById("next").style.display = "block";
+        questionNumber++;
+    }
+}
 
 function finishGame() {
     if (gameOver) return;
-
     gameOver = true;
     stopTimer();
 
@@ -583,7 +556,6 @@ function finishGame() {
             : score + " / " + questionDeck.length;
 
     let message;
-
     if (mode === "timeAttack") {
         message = "⏱️ Time is up! You scored " + score + " points!";
     } else if (score === questionDeck.length) {
@@ -598,8 +570,7 @@ function finishGame() {
 
     document.getElementById("finalMessage").textContent = message;
     document.getElementById("finalXP").textContent = xp;
-    document.getElementById("finalRank").textContent =
-        getRank().icon + " " + getRank().name;
+    document.getElementById("finalRank").textContent = getRank().icon + " " + getRank().name;
 
     updateXPDisplay();
 }
@@ -607,10 +578,7 @@ function finishGame() {
 function backToMenu() {
     stopTimer();
     gameOver = true;
-
-    if (typeof mapRequestNumber !== "undefined") {
-        mapRequestNumber++;
-    }
+    mapRequestNumber++;
 
     document.getElementById("game").classList.add("hidden");
     document.getElementById("result").classList.add("hidden");
@@ -626,11 +594,11 @@ function restartGame() {
 document.addEventListener("DOMContentLoaded", () => {
     updateXPDisplay();
 
-    document.getElementById("next").addEventListener(
-        "click",
-        nextQuestion
-    );
+    const nextBtn = document.getElementById("next");
+    if (nextBtn) {
+        nextBtn.addEventListener("click", nextQuestion);
+    }
 
-    console.log("🌍 GeoMaster loaded!");
-    console.log("Countries:", countries.length);
+    console.log("🌍 GeoMaster loaded successfully!");
+    console.log("Total Countries Available:", countries.length);
 });
