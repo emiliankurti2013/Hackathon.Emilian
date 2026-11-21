@@ -195,46 +195,24 @@ const countries = [
 
 
 // ==========================================
-// PART 1 - COUNTRY FLAGS AND GAME VARIABLES
+// PART 1 - VARIABLES AND XP SYSTEM
 // ==========================================
 
-// KEEP YOUR COMPLETE COUNTRIES ARRAY ABOVE THIS CODE.
-
-// Automatically generate flag image codes from flag emojis.
-countries.forEach(country => {
-    const flagPoints = Array.from(country.f || "")
-        .map(char => char.codePointAt(0));
-
-    if (flagPoints.length === 2 &&
-        flagPoints.every(cp => cp >= 0x1F1E6 && cp <= 0x1F1FF)) {
-
-        country.code = flagPoints.map(cp =>
-            String.fromCharCode(cp - 0x1F1E6 + 97)
-        ).join("");
-    }
-});
-
-// Kosovo needs a special country code.
-const flagCodeOverrides = {
-    "Kosovo": "xk"
-};
-
-countries.forEach(country => {
-    if (flagCodeOverrides[country.n]) {
-        country.code = flagCodeOverrides[country.n];
-    }
-});
-
-let mode = "";
+let currentMode = "";
 let score = 0;
 let questionNumber = 1;
 let correctCountry = null;
 let answered = false;
+let timeLeft = 30;
+let timerInterval = null;
+
 
 let selectedCountries = [];
 let questionDeck = [];
 
 const questionLimit = 10;
+
+let xp = Number(localStorage.getItem("geoMasterXP")) || 0;
 
 const ranks = [
     {name:"Beginner",xp:0,icon:"🌱"},
@@ -249,7 +227,66 @@ const ranks = [
     {name:"GeoMaster",xp:10000,icon:"💎"}
 ];
 
-let xp = Number(localStorage.getItem("geoMasterXP")) || 0;
+
+let gameOver = false;
+
+function getRank() {
+    return [...ranks].reverse().find(r => xp >= r.xp);
+}
+
+function addXP(amount) {
+    const oldRank = getRank();
+
+    xp += amount;
+    localStorage.setItem("geoMasterXP", xp);
+
+    const newRank = getRank();
+
+    updateXPDisplay();
+
+    if (oldRank.name !== newRank.name) {
+        alert("🎉 RANK UP!\n\n" + newRank.icon + " " + newRank.name);
+    }
+}
+
+function updateXPDisplay() {
+    const rank = getRank();
+    const nextRank = ranks.find(r => r.xp > xp);
+
+    document.getElementById("totalXP").textContent = xp;
+    document.getElementById("currentRank").textContent =
+        rank.icon + " " + rank.name;
+
+    document.getElementById("xpProgress").style.width =
+        (nextRank
+            ? ((xp - rank.xp) / (nextRank.xp - rank.xp)) * 100
+            : 100) + "%";
+
+    document.getElementById("nextRank").textContent =
+        nextRank
+            ? (nextRank.xp - xp) + " XP until " + nextRank.name
+            : "MAX RANK REACHED!";
+}
+
+function shuffle(array) {
+    const result = [...array];
+
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+
+    return result;
+}
+
+function getRandomOptions(correct) {
+    const wrong = shuffle(
+        selectedCountries.filter(c => c.n !== correct.n)
+    ).slice(0, 3);
+
+    return shuffle([correct, ...wrong]);
+}
+
 
 
 // ==========================================
@@ -263,7 +300,7 @@ function getRank() {
 function addXP(amount) {
     const oldRank = getRank();
 
-    xp += amount;
+    xp = Math.max(0, xp + amount);
 
     localStorage.setItem("geoMasterXP", xp);
 
@@ -272,10 +309,7 @@ function addXP(amount) {
     updateXPDisplay();
 
     if (oldRank.name !== newRank.name) {
-        alert(
-            "🎉 RANK UP!\n\n" +
-            newRank.icon + " " + newRank.name
-        );
+        alert("🎉 RANK UP!\n\n" + newRank.icon + " " + newRank.name);
     }
 }
 
@@ -296,8 +330,7 @@ function updateXPDisplay() {
 
     if (progress) {
         const percentage = nextRank
-            ? ((xp - rank.xp) /
-               (nextRank.xp - rank.xp)) * 100
+            ? ((xp - rank.xp) / (nextRank.xp - rank.xp)) * 100
             : 100;
 
         progress.style.width = percentage + "%";
@@ -315,9 +348,7 @@ function shuffle(array) {
 
     for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-
-        [result[i], result[j]] =
-        [result[j], result[i]];
+        [result[i], result[j]] = [result[j], result[i]];
     }
 
     return result;
@@ -333,277 +364,93 @@ function getRandomOptions(correct) {
 
 
 // ==========================================
-// PART 3 - WORLD MAP SYSTEM
-// NO GOOGLE MAPS
+// PART 3 - START GAME AND TIMER
 // ==========================================
-
-let worldMapData = null;
-let mapRequestNumber = 0;
-
-async function loadWorldMap() {
-    if (worldMapData) return worldMapData;
-
-    const response = await fetch(
-        "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
-    );
-
-    if (!response.ok) {
-        throw new Error("Could not download country map data.");
-    }
-
-    worldMapData = await response.json();
-
-    return worldMapData;
-}
-
-
-// FIND THE CORRECT COUNTRY
-
-function findCountryFeature(data, country) {
-    const aliases = {
-        "Ivory Coast": ["Côte d'Ivoire", "Ivory Coast"],
-        "Czechia": ["Czech Republic", "Czechia"],
-        "Russia": ["Russian Federation", "Russia"],
-        "South Korea": ["South Korea", "Republic of Korea"],
-        "North Korea": [
-            "North Korea",
-            "Democratic People's Republic of Korea"
-        ],
-        "Syria": ["Syrian Arab Republic", "Syria"],
-        "Bolivia": ["Bolivia", "Bolivia (Plurinational State of)"],
-        "Tanzania": ["United Republic of Tanzania", "Tanzania"],
-        "Venezuela": [
-            "Venezuela",
-            "Venezuela (Bolivarian Republic of)"
-        ],
-        "Moldova": ["Moldova", "Republic of Moldova"],
-        "Brunei": ["Brunei Darussalam", "Brunei"],
-        "Laos": ["Lao People's Democratic Republic", "Laos"],
-        "Vietnam": ["Viet Nam", "Vietnam"],
-        "Iran": ["Iran", "Iran (Islamic Republic of)"],
-        "South Africa": ["South Africa"],
-        "North Macedonia": ["North Macedonia"]
-    };
-
-    const possibleNames = [
-        country.n,
-        ...(aliases[country.n] || [])
-    ].map(name => name.toLowerCase());
-
-    return data.features.find(feature => {
-        const properties = feature.properties || {};
-
-        const names = [
-            properties.ADMIN,
-            properties.name,
-            properties.NAME,
-            properties.name_en,
-            properties.FORMAL_EN
-        ].filter(Boolean).map(name => name.toLowerCase());
-
-        return names.some(name => possibleNames.includes(name));
-    });
-}
-
-
-// DISPLAY COUNTRY MAP
-
-async function showCountryMap(country) {
-    const container = document.getElementById("countryMap");
-
-    if (!container) {
-        console.error("Missing #countryMap element in HTML.");
-        return;
-    }
-
-    const requestNumber = ++mapRequestNumber;
-
-    container.style.display = "flex";
-    container.innerHTML =
-        '<p class="map-loading">🌍 Loading country map...</p>';
-
-    try {
-        const data = await loadWorldMap();
-
-        if (requestNumber !== mapRequestNumber) return;
-
-        const feature = findCountryFeature(data, country);
-
-        if (!feature) {
-            container.innerHTML =
-                '<p class="map-loading">Map unavailable for ' +
-                country.n + '.</p>';
-            return;
-        }
-
-        drawCountryMap(feature, container);
-
-    } catch (error) {
-        console.error("Map error:", error);
-
-        if (requestNumber === mapRequestNumber) {
-            container.innerHTML =
-                '<p class="map-loading">Unable to load map. Check your internet connection.</p>';
-        }
-    }
-}
-
-
-// DRAW COUNTRY USING SVG
-
-function drawCountryMap(feature, container) {
-    const geometry = feature.geometry;
-
-    if (!geometry) {
-        container.textContent = "Map unavailable.";
-        return;
-    }
-
-    let polygons = [];
-
-    if (geometry.type === "Polygon") {
-        polygons = [geometry.coordinates];
-    } else if (geometry.type === "MultiPolygon") {
-        polygons = geometry.coordinates;
-    } else {
-        container.textContent = "Map unavailable.";
-        return;
-    }
-
-    const points = [];
-
-    polygons.forEach(polygon => {
-        if (polygon[0]) {
-            polygon[0].forEach(point => {
-                points.push(point);
-            });
-        }
-    });
-
-    if (points.length === 0) {
-        container.textContent = "Map unavailable.";
-        return;
-    }
-
-    const longitudes = points.map(p => p[0]);
-    const latitudes = points.map(p => p[1]);
-
-    const minLon = Math.min(...longitudes);
-    const maxLon = Math.max(...longitudes);
-
-    const minLat = Math.min(...latitudes);
-    const maxLat = Math.max(...latitudes);
-
-    const width = 600;
-    const height = 380;
-    const padding = 35;
-
-    const rangeX = Math.max(maxLon - minLon, 0.01);
-    const rangeY = Math.max(maxLat - minLat, 0.01);
-
-    const scale = Math.min(
-        (width - padding * 2) / rangeX,
-        (height - padding * 2) / rangeY
-    );
-
-    const drawnWidth = rangeX * scale;
-    const drawnHeight = rangeY * scale;
-
-    const offsetX = (width - drawnWidth) / 2;
-    const offsetY = (height - drawnHeight) / 2;
-
-    function project(point) {
-        return [
-            offsetX + (point[0] - minLon) * scale,
-            height - offsetY - (point[1] - minLat) * scale
-        ];
-    }
-
-    const svgNS = "http://www.w3.org/2000/svg";
-
-    const svg = document.createElementNS(svgNS, "svg");
-
-    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-    svg.setAttribute("role", "img");
-    svg.setAttribute(
-        "aria-label",
-        "Map of " + (feature.properties.ADMIN || "selected country")
-    );
-
-    polygons.forEach(polygon => {
-        polygon.forEach(ring => {
-            if (!ring || ring.length === 0) return;
-
-            const path = document.createElementNS(svgNS, "path");
-
-            const pathData = ring.map((point, index) => {
-                const [x, y] = project(point);
-
-                return (index === 0 ? "M " : "L ") +
-                    x.toFixed(2) + " " + y.toFixed(2);
-            }).join(" ") + " Z";
-
-            path.setAttribute("d", pathData);
-            path.setAttribute("fill", "#43d9a3");
-            path.setAttribute("stroke", "#ffffff");
-            path.setAttribute("stroke-width", "1.2");
-            path.setAttribute("stroke-linejoin", "round");
-
-            svg.appendChild(path);
-        });
-    });
-
-    container.innerHTML = "";
-    container.appendChild(svg);
-}
-
-
-// ==========================================
-// PART 4 - GAME LOGIC
-// ==========================================
-
-// START GAME
 
 function startGame(gameMode) {
     mode = gameMode;
     score = 0;
     questionNumber = 1;
     answered = false;
+    gameOver = false;
 
-    const selectedRegions = [
+    stopTimer();
+
+    const regions = [
         ...document.querySelectorAll(".regions input:checked")
     ].map(input => input.value);
 
-    if (selectedRegions.length === 0) {
-        alert("Please select at least one continent!");
+    if (regions.length === 0) {
+        alert("Select at least one continent!");
         return;
     }
 
-    selectedCountries = countries.filter(country =>
-        selectedRegions.includes(country.r)
+    selectedCountries = countries.filter(c =>
+        regions.includes(c.r)
     );
 
     if (selectedCountries.length < 4) {
-        alert("You need at least 4 countries to play!");
+        alert("Select more continents!");
         return;
     }
 
     questionDeck = shuffle(selectedCountries).slice(
         0,
-        Math.min(questionLimit, selectedCountries.length)
+        mode === "timeAttack" ? selectedCountries.length : Math.min(questionLimit, selectedCountries.length)
     );
 
     document.getElementById("menu").classList.add("hidden");
     document.getElementById("result").classList.add("hidden");
     document.getElementById("game").classList.remove("hidden");
 
-    updateXPDisplay();
+    const timerBox = document.getElementById("timerBox");
 
+    if (mode === "timeAttack") {
+        timerBox.classList.remove("hidden");
+        timeLeft = 30;
+        updateTimer();
+        startTimer();
+    } else {
+        timerBox.classList.add("hidden");
+    }
+
+    updateXPDisplay();
     nextQuestion();
 }
 
+function startTimer() {
+    stopTimer();
 
-// GENERATE QUESTION
+    timerInterval = setInterval(() => {
+        if (gameOver) {
+            stopTimer();
+            return;
+        }
+
+        timeLeft--;
+        updateTimer();
+
+        if (timeLeft <= 0) {
+            finishGame();
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval !== null) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+function updateTimer() {
+    const timer = document.getElementById("timer");
+    const box = document.getElementById("timerBox");
+
+    timer.textContent = timeLeft;
+
+    box.classList.toggle("danger", timeLeft <= 10);
+}
 
 function nextQuestion() {
     if (questionNumber > questionDeck.length) {
@@ -630,7 +477,6 @@ function nextQuestion() {
     mapContainer.style.display = "none";
     mapContainer.innerHTML = "";
 
-    // Invalidate an older map request.
     mapRequestNumber++;
 
     questionElement.textContent = "";
@@ -638,42 +484,56 @@ function nextQuestion() {
 
     document.getElementById("next").style.display = "none";
 
+    // Choose question type
+    const randomModes = ["flag", "capital", "country", "map"];
+
+    currentMode = mode;
+
+    if (mode === "random" || mode === "timeAttack") {
+        currentMode = randomModes[
+            Math.floor(Math.random() * randomModes.length)
+        ];
+    }
+
+    // Generate answers
     const options = getRandomOptions(correctCountry);
 
-    // FLAG QUIZ
+    // FLAG QUESTION
+    if (currentMode === "flag") {
 
-   if (mode === "flag") {
-    flagElement.innerHTML = `
-        <img
-            src="https://flagcdn.com/w320/${correctCountry.code}.png"
-            alt="${correctCountry.n} flag"
-            style="width:220px;max-width:100%;border-radius:12px;"
-        >
-    `;
+        flagElement.style.display = "flex";
 
-    questionElement.textContent =
-        "Which country does this flag belong to?";
-}
+        flagElement.innerHTML = `
+            <img
+                src="https://flagcdn.com/w320/${correctCountry.code}.png"
+                alt="${correctCountry.n} flag"
+                style="width:220px;max-width:100%;border-radius:12px;"
+            >
+        `;
 
-    // CAPITAL QUIZ
+        questionElement.textContent =
+            "Which country does this flag belong to?";
+    }
 
-    else if (mode === "capital") {
+    // CAPITAL QUESTION
+    else if (currentMode === "capital") {
+
         questionElement.textContent =
             "What is the capital of " + correctCountry.n + "?";
     }
 
-    // COUNTRY QUIZ
+    // COUNTRY QUESTION
+    else if (currentMode === "country") {
 
-    else if (mode === "country") {
         questionElement.textContent =
             "This country is in " + correctCountry.r +
             ". Its capital is " + correctCountry.c +
             ". Which country is it?";
     }
 
-    // MAP QUIZ
+    // MAP QUESTION
+    else if (currentMode === "map") {
 
-    else if (mode === "map") {
         flagElement.style.display = "none";
 
         questionElement.textContent =
@@ -682,15 +542,17 @@ function nextQuestion() {
         showCountryMap(correctCountry);
     }
 
-    // ANSWER OPTIONS
-
+    // CREATE ANSWER BUTTONS
     options.forEach(country => {
+
         const button = document.createElement("button");
 
         button.className = "option";
 
         button.textContent =
-            mode === "capital" ? country.c : country.n;
+            currentMode === "capital"
+                ? country.c
+                : country.n;
 
         button.addEventListener("click", () => {
             checkAnswer(country, button);
@@ -701,115 +563,54 @@ function nextQuestion() {
 }
 
 
-// CHECK ANSWER
+// ==========================================
+// PART 4 - ANSWERS AND RESULTS
+// ==========================================
 
-function checkAnswer(country, button) {
-    if (answered) return;
-
-    answered = true;
-
-    const feedback = document.getElementById("feedback");
-
-    const isCorrect =
-        country.n === correctCountry.n;
-
-    if (isCorrect) {
-        score++;
-
-        addXP(20);
-
-        feedback.style.color = "#43d9a3";
-
-        feedback.textContent =
-            "✓ Correct! +20 XP! Great job!";
-
-        button.classList.add("correct");
-
-    } else {
-        feedback.style.color = "#ff7777";
-
-        feedback.textContent =
-            "✗ Incorrect! The correct answer was " +
-            (mode === "capital"
-                ? correctCountry.c
-                : correctCountry.n);
-
-        button.classList.add("incorrect");
-    }
-
-    // Highlight the correct option.
-    document.querySelectorAll(".option").forEach(btn => {
-        const correctAnswer =
-            mode === "capital"
-                ? correctCountry.c
-                : correctCountry.n;
-
-        if (btn.textContent === correctAnswer) {
-            btn.classList.add("correct");
-        }
-
-        btn.disabled = true;
-    });
-
-    document.getElementById("score").textContent = score;
-
-    document.getElementById("next").style.display =
-        "inline-block";
-
-    questionNumber++;
-}
-
-
-// FINISH GAME
 
 function finishGame() {
-    document.getElementById("game").classList.add("hidden");
+    if (gameOver) return;
 
+    gameOver = true;
+    stopTimer();
+
+    document.getElementById("game").classList.add("hidden");
     document.getElementById("result").classList.remove("hidden");
 
     document.getElementById("finalScore").textContent =
-        score + " / " + questionDeck.length;
+        mode === "timeAttack"
+            ? score + " points"
+            : score + " / " + questionDeck.length;
 
     let message;
 
-    if (score === questionDeck.length) {
-        message =
-            "🏆 PERFECT SCORE! You are a geography master!";
+    if (mode === "timeAttack") {
+        message = "⏱️ Time is up! You scored " + score + " points!";
+    } else if (score === questionDeck.length) {
+        message = "🏆 PERFECT SCORE!";
     } else if (score >= 8) {
         message = "🌍 Amazing geography knowledge!";
     } else if (score >= 6) {
-        message = "👏 Great job! Keep practicing!";
-    } else if (score >= 4) {
-        message = "👍 Good effort! You can do better!";
+        message = "👏 Great job!";
     } else {
-        message = "📚 Keep learning and try again!";
+        message = "📚 Keep practicing!";
     }
 
-    document.getElementById("finalMessage").textContent =
-        message;
-
-    const finalXP = document.getElementById("finalXP");
-    const finalRank = document.getElementById("finalRank");
-
-    if (finalXP) {
-        finalXP.textContent = xp;
-    }
-
-    if (finalRank) {
-        const rank = getRank();
-
-        finalRank.textContent =
-            rank.icon + " " + rank.name;
-    }
+    document.getElementById("finalMessage").textContent = message;
+    document.getElementById("finalXP").textContent = xp;
+    document.getElementById("finalRank").textContent =
+        getRank().icon + " " + getRank().name;
 
     updateXPDisplay();
 }
 
-
-// BACK TO MENU
-
 function backToMenu() {
-    mapRequestNumber++;
+    stopTimer();
+    gameOver = true;
+
+    if (typeof mapRequestNumber !== "undefined") {
+        mapRequestNumber++;
+    }
 
     document.getElementById("game").classList.add("hidden");
     document.getElementById("result").classList.add("hidden");
@@ -818,29 +619,18 @@ function backToMenu() {
     updateXPDisplay();
 }
 
-
-// RESTART GAME
-
 function restartGame() {
     startGame(mode);
 }
 
-
-// INITIALIZE GAME
-
 document.addEventListener("DOMContentLoaded", () => {
     updateXPDisplay();
 
-    const nextButton = document.getElementById("next");
+    document.getElementById("next").addEventListener(
+        "click",
+        nextQuestion
+    );
 
-    if (nextButton) {
-        nextButton.addEventListener("click", nextQuestion);
-        document.getElementById("questionProgress").style.width =
-    ((questionNumber - 1) / questionDeck.length * 100) + "%";
-    }
-
-    console.log("🌍 GeoMaster loaded successfully!");
-    console.log("Countries loaded:", countries.length);
-    console.log("Player XP:", xp);
-    console.log("Player Rank:", getRank().name);
+    console.log("🌍 GeoMaster loaded!");
+    console.log("Countries:", countries.length);
 });

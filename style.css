@@ -1,353 +1,252 @@
 
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background: #10172e;
+    background: linear-gradient(135deg, #10152e, #202b55);
     color: white;
     min-height: 100vh;
+    padding: 25px 15px;
 }
 
-.topbar {
-    background: #192542;
-    padding: 18px 6%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #30415f;
+.app {
+    max-width: 850px;
+    margin: auto;
 }
 
-.logo {
-    font-size: 25px;
-    font-weight: 900;
-    color: #55e5c0;
-}
-
-.player-info {
-    display: flex;
-    gap: 20px;
-    font-weight: bold;
-    color: #f5d76e;
-}
-
-.container {
-    max-width: 900px;
-    margin: 35px auto;
-    padding: 15px;
-}
-
-.welcome {
+header {
     text-align: center;
-    padding: 30px 10px;
+    margin-bottom: 30px;
 }
 
-.welcome h1 {
-    font-size: 48px;
-    margin: 15px 0;
-    color: #55e5c0;
+header h1 {
+    font-size: 42px;
+    color: #65e8c0;
 }
 
-.welcome p {
-    color: #aebbd4;
-    font-size: 17px;
+header p {
+    color: #b7c5e8;
+    margin-top: 8px;
 }
 
-.tag {
-    color: #55e5c0;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.card {
-    background: #202e4c;
-    border: 1px solid #354765;
-    border-radius: 20px;
-    padding: 28px;
-    margin: 20px 0;
-    box-shadow: 0 10px 30px #0003;
-}
-
-.card h2 {
-    margin-top: 0;
-}
-
-.regions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.regions label {
-    background: #30415f;
-    padding: 13px 17px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.regions input {
-    accent-color: #55e5c0;
-}
-
-.modes {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-}
-
-button {
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 13px;
-    padding: 16px;
-    transition: .2s;
-}
-
-button:hover {
-    transform: translateY(-3px);
-    filter: brightness(1.1);
-}
-
-.mode {
-    min-height: 110px;
-    color: white;
-    font-size: 19px;
-    line-height: 1.7;
-}
-
-.flag-mode {
-    background: #7652d8;
-}
-
-.capital-mode {
-    background: #238acb;
-}
-
-.country-mode {
-    background: #d98235;
-}
-
-.map-mode {
-    background: #229d78;
-}
-
-.xp-card {
-    text-align: center;
-}
-
-.progress {
-    height: 12px;
-    background: #354765;
-    border-radius: 20px;
-    overflow: hidden;
-    margin: 15px 0;
-}
-
-.progress div {
-    width: 0%;
-    height: 100%;
-    background: #55e5c0;
-    border-radius: 20px;
-    transition: width .4s;
+.panel {
+    background: #202b49;
+    padding: 30px;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px #0005;
+    margin-bottom: 20px;
 }
 
 .hidden {
     display: none !important;
 }
 
-.game-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    color: #55e5c0;
-    margin-bottom: 15px;
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
-.question-card {
+.regions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.regions label {
+    background: #303e62;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+button {
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    background: #536dfe;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.15);
+}
+
+.time-button {
+    background: linear-gradient(135deg, #ff7043, #e83e75);
+}
+
+.rank-panel {
+    margin-top: 30px;
     text-align: center;
-    padding: 35px 20px;
+    background: #303e62;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.rank-panel p {
+    margin: 10px;
+}
+
+.xp-track, .progress-track {
+    height: 10px;
+    background: #10182e;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#xpProgress, #questionProgress {
+    height: 100%;
+    width: 0%;
+    background: #43d9a3;
+    transition: width .3s;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+#timerBox {
+    color: #ff886c;
+    font-size: 21px;
+}
+
+#timerBox.danger {
+    color: #ff4040;
+    animation: pulse .5s infinite alternate;
+}
+
+@keyframes pulse {
+    to { transform: scale(1.12); }
 }
 
 #flag {
-    font-size: 105px;
+    display: flex;
+    justify-content: center;
     margin: 25px 0;
-    line-height: 1.3;
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
 }
 
-#question {
-    font-size: 25px;
-    line-height: 1.5;
+#flag img {
+    width: 220px;
+    max-width: 100%;
+    border-radius: 12px;
 }
 
 #countryMap {
     display: none;
     justify-content: center;
-    align-items: center;
     margin: 20px auto;
-    background: #f5f7fb;
-    border-radius: 15px;
-    padding: 10px;
-    max-width: 550px;
-    min-height: 200px;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 #countryMap svg {
     width: 100%;
-    max-height: 350px;
-}
-
-#countryMap path {
-    fill: #55b9a0;
-    stroke: #173c55;
-    stroke-width: 1.5;
-    stroke-linejoin: round;
+    max-width: 600px;
+    height: auto;
 }
 
 .map-loading {
-    color: #263a50;
+    padding: 25px;
+    text-align: center;
 }
 
-.answers {
+#question {
+    margin: 25px 0;
+    text-align: center;
+}
+
+.options {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 12px;
 }
 
 .option {
-    color: white;
-    min-height: 85px;
-    font-size: 19px;
-    overflow-wrap: anywhere;
-}
-
-.option:nth-child(1) {
-    background: #7652d8;
-}
-
-.option:nth-child(2) {
-    background: #238acb;
-}
-
-.option:nth-child(3) {
-    background: #d98235;
-}
-
-.option:nth-child(4) {
-    background: #229d78;
-}
-
-.option:disabled {
-    cursor: default;
-    opacity: .8;
+    min-height: 65px;
+    background: #384a70;
 }
 
 .option.correct {
-    background: #159c68;
-    outline: 3px solid #55e5c0;
+    background: #159c70;
 }
 
 .option.incorrect {
-    background: #d94b61;
+    background: #d94359;
+}
+
+.option:disabled {
+    cursor: not-allowed;
+    opacity: 1;
 }
 
 #feedback {
     text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 20px;
-    min-height: 28px;
+    margin: 20px 0;
+    min-height: 25px;
 }
 
-#next {
+.next-button {
     display: none;
+    background: #159c70;
     width: 100%;
-    background: #55e5c0;
-    color: #102033;
-    margin-top: 10px;
+    margin-bottom: 12px;
 }
 
 .back-button {
-    display: block;
-    background: #354765;
-    color: white;
-    margin: 12px auto;
+    width: 100%;
+    background: #45516d;
 }
 
-.result-card {
+#result {
     text-align: center;
-    padding: 45px 20px;
 }
 
-.result-card h1 {
-    color: #55e5c0;
-    font-size: 35px;
-}
-
-.result-card h2 {
+#result h1 {
+    color: #65e8c0;
     font-size: 55px;
     margin: 20px;
 }
 
-.result-icon {
-    font-size: 75px;
+#result button {
+    margin: 10px;
 }
 
-.result-stats {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin: 25px;
-}
-
-.result-stats div {
-    background: #30415f;
-    border-radius: 15px;
-    padding: 15px 30px;
-}
-
-.result-card button {
-    background: #55e5c0;
-    color: #102033;
-    margin: 8px;
-}
-
-@media(max-width: 600px) {
-    .topbar {
-        flex-direction: column;
-        gap: 15px;
+@media(max-width: 550px) {
+    .panel {
+        padding: 18px;
     }
 
-    .welcome h1 {
-        font-size: 35px;
-    }
-
-    .modes,
-    .answers {
+    .mode-grid, .options {
         grid-template-columns: 1fr;
     }
 
-    .card {
-        padding: 20px;
+    header h1 {
+        font-size: 32px;
     }
 
-    .player-info {
-        font-size: 13px;
-    }
-
-    #question {
-        font-size: 21px;
-    }
-
-    .result-stats {
-        gap: 10px;
+    .game-stats {
+        font-size: 14px;
     }
 }
