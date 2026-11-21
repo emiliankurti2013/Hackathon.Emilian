@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoMaster - Geography Challenge</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="logo">🌍 GeoMaster</div>
+    <div class="player-info">
+        <span>⭐ <span id="totalXP">0</span> XP</span>
+        <span id="currentRank">🌱 Beginner</span>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- MENU -->
+    <section id="menu">
+        <div class="welcome">
+            <span class="tag">THE ULTIMATE GEOGRAPHY GAME</span>
+            <h1>Explore the World!</h1>
+            <p>Test your geography knowledge, earn XP and become a GeoMaster.</p>
+        </div>
+
+        <div class="card">
+            <h2>🌎 Choose Your Continents</h2>
+            <div class="regions">
+                <label><input type="checkbox" value="Europe" checked> 🇪🇺 Europe</label>
+                <label><input type="checkbox" value="Asia" checked> 🌏 Asia</label>
+                <label><input type="checkbox" value="North America" checked> 🌎 North America</label>
+                <label><input type="checkbox" value="South America" checked> 🌎 South America</label>
+                <label><input type="checkbox" value="Africa" checked> 🌍 Africa</label>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎮 Choose Your Challenge</h2>
+            <div class="modes">
+                <button class="mode flag-mode" onclick="startGame('flag')">
+                    🚩<br>Flag Challenge
+                </button>
+                <button class="mode capital-mode" onclick="startGame('capital')">
+                    🏛️<br>Capital Challenge
+                </button>
+                <button class="mode country-mode" onclick="startGame('country')">
+                    🌍<br>Country Challenge
+                </button>
+                <button class="mode map-mode" onclick="startGame('map')">
+                    🗺️<br>Map Challenge
+                </button>
+            </div>
+        </div>
+
+        <div class="card xp-card">
+            <h2>🏆 Your Progress</h2>
+            <h3 id="currentRank">🌱 Beginner</h3>
+            <div class="progress">
+                <div id="xpProgress"></div>
+            </div>
+            <p id="nextRank">100 XP until Explorer</p>
+        </div>
+    </section>
+
+    <!-- GAME -->
+    <section id="game" class="hidden">
+
+        <div class="game-header">
+            <div>QUESTION <span id="number">1</span>/10</div>
+            <div>⭐ <span id="score">0</span> POINTS</div>
+        </div>
+
+        <div class="progress game-progress">
+            <div id="questionProgress"></div>
+        </div>
+
+        <div class="card question-card">
+            <span class="tag">GEOGRAPHY CHALLENGE</span>
+
+            <div id="flag"></div>
+
+            <div id="countryMap"></div>
+
+            <h2 id="question">Question goes here</h2>
+        </div>
+
+        <div id="options" class="answers"></div>
+
+        <div id="feedback"></div>
+
+        <button id="next" onclick="nextQuestion()">
+            NEXT QUESTION →
+        </button>
+
+        <button class="back-button" onclick="backToMenu()">
+            ← Back to Menu
+        </button>
+
+    </section>
+
+    <!-- RESULTS -->
+    <section id="result" class="hidden">
+        <div class="card result-card">
+            <div class="result-icon">🏆</div>
+            <h1>Challenge Complete!</h1>
+            <h2 id="finalScore">0 / 10</h2>
+            <p id="finalMessage"></p>
+
+            <div class="result-stats">
+                <div>
+                    <h3>⭐ XP</h3>
+                    <p id="finalXP">0</p>
+                </div>
+                <div>
+                    <h3>🏅 RANK</h3>
+                    <p id="finalRank">Beginner</p>
+                </div>
+            </div>
+
+            <button onclick="restartGame()">🔄 Play Again</button>
+            <button class="back-button" onclick="backToMenu()">🏠 Main Menu</button>
+        </div>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
