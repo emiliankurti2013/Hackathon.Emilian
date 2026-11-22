@@ -1,3 +1,7 @@
+// ==========================================
+// COUNTRIES DATABASE
+// ==========================================
+
 const countries = [
     // EUROPE
     {n:"Albania",c:"Tirana",f:"🇦🇱",r:"Europe",code:"al"},
@@ -192,23 +196,139 @@ const countries = [
 ];
 
 // ==========================================
+// SEPARATE BORDER LOOKUP TABLE
+// ==========================================
+
+const countryBorders = {
+    "Albania": ["Montenegro", "Kosovo", "North Macedonia", "Greece"],
+    "Andorra": ["France", "Spain"],
+    "Austria": ["Czechia", "Germany", "Hungary", "Italy", "Liechtenstein", "Slovakia", "Slovenia", "Switzerland"],
+    "Belarus": ["Latvia", "Lithuania", "Poland", "Russia", "Ukraine"],
+    "Belgium": ["France", "Germany", "Luxembourg", "Netherlands"],
+    "Bosnia and Herzegovina": ["Croatia", "Montenegro", "Serbia"],
+    "Bulgaria": ["Greece", "North Macedonia", "Romania", "Serbia", "Turkey"],
+    "Croatia": ["Bosnia and Herzegovina", "Hungary", "Montenegro", "Serbia", "Slovenia"],
+    "Cyprus": [],
+    "Czechia": ["Austria", "Germany", "Poland", "Slovakia"],
+    "Denmark": ["Germany"],
+    "Estonia": ["Latvia", "Russia"],
+    "Finland": ["Norway", "Sweden", "Russia"],
+    "France": ["Andorra", "Belgium", "Germany", "Italy", "Luxembourg", "Monaco", "Spain", "Switzerland"],
+    "Germany": ["Austria", "Belgium", "Czechia", "Denmark", "France", "Luxembourg", "Netherlands", "Poland", "Switzerland"],
+    "Greece": ["Albania", "Bulgaria", "North Macedonia", "Turkey"],
+    "Hungary": ["Austria", "Croatia", "Romania", "Serbia", "Slovakia", "Slovenia", "Ukraine"],
+    "Iceland": [],
+    "Ireland": ["United Kingdom"],
+    "Italy": ["Austria", "France", "San Marino", "Slovenia", "Switzerland", "Vatican City"],
+    "Kosovo": ["Albania", "Montenegro", "North Macedonia", "Serbia"],
+    "Latvia": ["Belarus", "Estonia", "Lithuania", "Russia"],
+    "Liechtenstein": ["Austria", "Switzerland"],
+    "Lithuania": ["Belarus", "Latvia", "Poland", "Russia"],
+    "Luxembourg": ["Belgium", "France", "Germany"],
+    "Malta": [],
+    "Moldova": ["Romania", "Ukraine"],
+    "Monaco": ["France"],
+    "Montenegro": ["Albania", "Bosnia and Herzegovina", "Croatia", "Kosovo", "Serbia"],
+    "Netherlands": ["Belgium", "Germany"],
+    "North Macedonia": ["Albania", "Bulgaria", "Greece", "Kosovo", "Serbia"],
+    "Norway": ["Finland", "Sweden", "Russia"],
+    "Poland": ["Belarus", "Czechia", "Germany", "Lithuania", "Russia", "Slovakia", "Ukraine"],
+    "Portugal": ["Spain"],
+    "Romania": ["Bulgaria", "Hungary", "Moldova", "Serbia", "Ukraine"],
+    "Russia": ["Azerbaijan", "Belarus", "China", "Estonia", "Finland", "Georgia", "Kazakhstan", "North Korea", "Latvia", "Lithuania", "Mongolia", "Norway", "Poland", "Ukraine"],
+    "San Marino": ["Italy"],
+    "Serbia": ["Bosnia and Herzegovina", "Bulgaria", "Croatia", "Hungary", "Kosovo", "Montenegro", "North Macedonia", "Romania"],
+    "Slovakia": ["Austria", "Czechia", "Poland", "Hungary", "Ukraine"],
+    "Slovenia": ["Austria", "Croatia", "Italy", "Hungary"],
+    "Spain": ["Andorra", "France", "Portugal"],
+    "Sweden": ["Finland", "Norway"],
+    "Switzerland": ["Austria", "France", "Italy", "Liechtenstein", "Germany"],
+    "Ukraine": ["Belarus", "Hungary", "Moldova", "Poland", "Romania", "Russia", "Slovakia"],
+    "United Kingdom": ["Ireland"],
+    "Vatican City": ["Italy"],
+
+    // NORTH AMERICA
+    "Canada": ["United States"],
+    "United States": ["Canada", "Mexico"],
+    "Mexico": ["United States", "Guatemala", "Belize"],
+    "Guatemala": ["Mexico", "Belize", "Honduras", "El Salvador"],
+    "Belize": ["Mexico", "Guatemala"],
+    "Honduras": ["Guatemala", "El Salvador", "Nicaragua"],
+    "El Salvador": ["Guatemala", "Honduras"],
+    "Nicaragua": ["Honduras", "Costa Rica"],
+    "Costa Rica": ["Nicaragua", "Panama"],
+    "Panama": ["Costa Rica", "Colombia"],
+
+    // SOUTH AMERICA
+    "Argentina": ["Bolivia", "Brazil", "Chile", "Paraguay", "Uruguay"],
+    "Bolivia": ["Argentina", "Brazil", "Chile", "Paraguay", "Peru"],
+    "Brazil": ["Argentina", "Bolivia", "Colombia", "Guyana", "Paraguay", "Peru", "Suriname", "Uruguay", "Venezuela"],
+    "Chile": ["Argentina", "Bolivia", "Peru"],
+    "Colombia": ["Brazil", "Ecuador", "Panama", "Peru", "Venezuela"],
+    "Ecuador": ["Colombia", "Peru"],
+    "Guyana": ["Brazil", "Suriname", "Venezuela"],
+    "Paraguay": ["Argentina", "Bolivia", "Brazil"],
+    "Peru": ["Bolivia", "Brazil", "Chile", "Colombia", "Ecuador"],
+    "Suriname": ["Brazil", "Guyana"],
+    "Uruguay": ["Argentina", "Brazil"],
+    "Venezuela": ["Brazil", "Colombia", "Guyana"],
+
+    // ASIA
+    "Afghanistan": ["China", "Iran", "Pakistan", "Tajikistan", "Turkmenistan", "Uzbekistan"],
+    "Armenia": ["Azerbaijan", "Georgia", "Iran", "Turkey"],
+    "Azerbaijan": ["Armenia", "Georgia", "Iran", "Russia", "Turkey"],
+    "China": ["Afghanistan", "Bhutan", "India", "Kazakhstan", "Kyrgyzstan", "Laos", "Mongolia", "Myanmar", "Nepal", "North Korea", "Pakistan", "Russia", "Tajikistan", "Vietnam"],
+    "India": ["Bangladesh", "Bhutan", "China", "Myanmar", "Nepal", "Pakistan"],
+    "Japan": [],
+    "South Korea": ["North Korea"],
+    "North Korea": ["China", "Russia", "South Korea"],
+    "Pakistan": ["Afghanistan", "China", "India", "Iran"],
+    "Turkey": ["Armenia", "Azerbaijan", "Bulgaria", "Georgia", "Greece", "Iran", "Iraq", "Syria"],
+
+    // AFRICA
+    "Egypt": ["Israel", "Libya", "Sudan"],
+    "South Africa": ["Botswana", "Lesotho", "Mozambique", "Namibia", "Eswatini", "Zimbabwe"],
+    "Nigeria": ["Benin", "Cameroon", "Chad", "Niger"]
+};
+
+// ==========================================
 // GAME STATE & VARIABLES
 // ==========================================
 
 let currentMode = "";
 let score = 0;
+let botScore = 0;
+let lives = 3;
 let questionNumber = 1;
 let correctCountry = null;
 let answered = false;
 let timeLeft = 30;
 let timerInterval = null;
-let mapRequestNumber = 0;
+let botTimeout = null;
 let selectedCountries = [];
 let questionDeck = [];
 let gameOver = false;
 
+let speedrunTimerInterval = null;
+let speedrunTimeLeft = 300;
+let guessedCountries = [];
+
 const questionLimit = 10;
 let xp = Number(localStorage.getItem("geoMasterXP")) || 0;
+let gamesPlayed = Number(localStorage.getItem("geoMasterGames")) || 0;
+let bestScore = Number(localStorage.getItem("geoMasterBest")) || 0;
+let matchHistory = JSON.parse(localStorage.getItem("geoMasterHistory")) || [];
+
+// Continent Conquest Unlocked Regions (Europe unlocked by default)
+let unlockedRegions = JSON.parse(localStorage.getItem("geoMasterUnlockedRegions")) || ["Europe"];
+
+const campaignRegions = [
+    { name: "Europe", icon: "🌍", desc: "Master the capitals and flags of Europe." },
+    { name: "Asia", icon: "🌏", desc: "Journey across Asia." },
+    { name: "North America", icon: "🌎", desc: "Conquer North America." },
+    { name: "South America", icon: "🌍", desc: "Explore South America." },
+    { name: "Africa", icon: "🌍", desc: "Test your knowledge of African nations." }
+];
 
 const ranks = [
     {name:"Beginner",xp:0,icon:"🌱"},
@@ -223,9 +343,224 @@ const ranks = [
     {name:"GeoMaster",xp:10000,icon:"💎"}
 ];
 
+const achievements = [
+    { id: "first_game", title: "First Steps", desc: "Complete your first game", icon: "🎮", check: () => gamesPlayed >= 1 },
+    { id: "gamer_5", title: "Dedicated Explorer", desc: "Play 5 games", icon: "🕹️", check: () => gamesPlayed >= 5 },
+    { id: "score_5", title: "Top Scorer", desc: "Score 5 or more in a game", icon: "⭐", check: () => bestScore >= 5 },
+    { id: "perfect", title: "Perfectionist", desc: "Get a perfect score of 10/10", icon: "🏆", check: () => bestScore >= 10 },
+    { id: "xp_500", title: "XP Collector", desc: "Reach 500 Total XP", icon: "💎", check: () => xp >= 500 },
+    { id: "veteran", title: "Global Veteran", desc: "Play 10 games", icon: "🌐", check: () => gamesPlayed >= 10 },
+    { id: "high_roller", title: "Geography Legend", desc: "Score 10 in Time Attack or Bot Match", icon: "👑", check: () => bestScore >= 10 },
+    { id: "xp_1000", title: "Master Scholar", desc: "Reach 1,000 Total XP", icon: "⭐", check: () => xp >= 1000 }
+];
+
+const shopItems = [
+    { id: "theme_emerald", name: "Emerald Matrix Theme", desc: "Changes accent and background to green.", cost: 100, type: "theme", color: "#10b981", className: "theme-emerald", icon: "🟢" },
+    { id: "theme_cyber", name: "Cyberpunk Neon Theme", desc: "Changes accent and background to neon gold.", cost: 250, type: "theme", color: "#f59e0b", className: "theme-cyber", icon: "⚡" },
+    { id: "theme_crimson", name: "Crimson Red Theme", desc: "Changes accent and background to dark red.", cost: 350, type: "theme", color: "#ef4444", className: "theme-crimson", icon: "🔴" },
+    { id: "title_master", name: "Title: 'Cartographer'", desc: "Unlocks an exclusive profile title.", cost: 500, type: "title", value: "Cartographer", icon: "📜" }
+];
+
+let ownedItems = JSON.parse(localStorage.getItem("geoMasterOwned")) || [];
+let equippedTheme = localStorage.getItem("geoMasterTheme") || "#66c0f4";
+let equippedClass = localStorage.getItem("geoMasterThemeClass") || "";
+let equippedTitle = localStorage.getItem("geoMasterTitle") || "Beginner Geographer";
+let currentUsername = localStorage.getItem("geoMasterUsername") || "GeoMaster User";
+let customAvatar = localStorage.getItem("geoMasterAvatar") || "";
+
 // ==========================================
-// XP & RANK SYSTEM
+// AUDIO SYSTEM & SETTINGS
 // ==========================================
+
+let soundEnabled = localStorage.getItem("geoMasterSound") !== "false";
+let bgmEnabled = localStorage.getItem("geoMasterBGM") === "true";
+let masterVolume = Number(localStorage.getItem("geoMasterVolume")) || 0.5;
+
+let bgmAudioCtx = null;
+let bgmInterval = null;
+
+function updateVolume(val) {
+    masterVolume = Number(val);
+    localStorage.setItem("geoMasterVolume", masterVolume);
+}
+
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem("geoMasterSound", soundEnabled);
+    const btn = document.getElementById("soundToggleBtn");
+    if (btn) {
+        btn.textContent = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+    }
+}
+
+function toggleBGM() {
+    bgmEnabled = !bgmEnabled;
+    localStorage.setItem("geoMasterBGM", bgmEnabled);
+    const btn = document.getElementById("bgmToggleBtn");
+    if (btn) {
+        btn.textContent = bgmEnabled ? "🎵 BGM: ON" : "🎵 BGM: OFF";
+    }
+
+    if (bgmEnabled) {
+        startAmbientBGM();
+    } else {
+        stopAmbientBGM();
+    }
+}
+
+function startAmbientBGM() {
+    stopAmbientBGM();
+    if (!bgmEnabled) return;
+
+    try {
+        bgmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const chordFrequencies = [
+            [130.81, 196.00, 261.63], // C3, G3, C4
+            [110.00, 164.81, 220.00], // A2, E3, A3
+            [146.83, 220.00, 293.66], // D3, A3, D4
+            [98.00, 146.83, 196.00]   // G2, D3, G3
+        ];
+
+        let chordIndex = 0;
+
+        function playChord() {
+            if (!bgmEnabled || !bgmAudioCtx) return;
+            const freqs = chordFrequencies[chordIndex];
+            chordIndex = (chordIndex + 1) % chordFrequencies.length;
+
+            freqs.forEach(freq => {
+                const osc = bgmAudioCtx.createOscillator();
+                const gain = bgmAudioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, bgmAudioCtx.currentTime);
+
+                const now = bgmAudioCtx.currentTime;
+                const targetVol = masterVolume * 0.03;
+
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(targetVol, now + 1.5);
+                gain.gain.linearRampToValueAtTime(0.001, now + 5.5);
+
+                osc.connect(gain);
+                gain.connect(bgmAudioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 6.0);
+            });
+        }
+
+        playChord();
+        bgmInterval = setInterval(playChord, 6000);
+    } catch (e) {
+        console.error("BGM error:", e);
+    }
+}
+
+function stopAmbientBGM() {
+    if (bgmInterval) {
+        clearInterval(bgmInterval);
+        bgmInterval = null;
+    }
+    if (bgmAudioCtx) {
+        try {
+            bgmAudioCtx.close();
+        } catch (e) {}
+        bgmAudioCtx = null;
+    }
+}
+
+function playSteamClick() {
+    if (!soundEnabled) return;
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.04);
+        
+        const vol = masterVolume * 0.08;
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+    } catch (e) {}
+}
+
+document.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON" || e.target.closest("button")) {
+        playSteamClick();
+    }
+});
+
+function playCorrectSound() {
+    if (!soundEnabled) return;
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        [523.25, 659.25, 783.99].forEach((freq, index) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + (index * 0.08));
+            
+            const vol = masterVolume * 0.08;
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime + (index * 0.08));
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (index * 0.08) + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime + (index * 0.08));
+            osc.stop(audioCtx.currentTime + (index * 0.08) + 0.2);
+        });
+    } catch (e) {}
+}
+
+function playWrongSound() {
+    if (!soundEnabled) return;
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        [220, 207.65, 196, 174.61].forEach((freq, index) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + (index * 0.22));
+            const duration = index === 3 ? 0.5 : 0.18;
+            
+            const vol = masterVolume * 0.1;
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime + (index * 0.22));
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (index * 0.22) + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime + (index * 0.22));
+            osc.stop(audioCtx.currentTime + (index * 0.22) + duration);
+        });
+    } catch (e) {}
+}
+
+// ==========================================
+// DAILY LOGIN & XP
+// ==========================================
+
+function checkDailyLogin() {
+    const today = new Date().toDateString();
+    const lastLogin = localStorage.getItem("geoMasterLastLogin");
+    let streak = Number(localStorage.getItem("geoMasterStreak")) || 0;
+
+    if (lastLogin !== today) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        streak = (lastLogin === yesterday.toDateString()) ? streak + 1 : 1;
+        localStorage.setItem("geoMasterLastLogin", today);
+        localStorage.setItem("geoMasterStreak", streak);
+        const bonusXP = streak * 15;
+        addXP(bonusXP);
+        setTimeout(() => alert(`🔥 Daily Login Streak!\nDay ${streak} Streak Bonus!\nReward: +${bonusXP} XP!`), 400);
+    }
+}
 
 function getRank() {
     return [...ranks].reverse().find(rank => xp >= rank.xp);
@@ -236,369 +571,772 @@ function addXP(amount) {
     xp = Math.max(0, xp + amount);
     localStorage.setItem("geoMasterXP", xp);
     const newRank = getRank();
-
-    updateXPDisplay();
-
+    updateDashboardStats();
     if (oldRank.name !== newRank.name) {
         alert("🎉 RANK UP!\n\n" + newRank.icon + " " + newRank.name);
     }
 }
 
-function updateXPDisplay() {
+function renderBadges() {
+    const grid = document.getElementById("badgesGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    achievements.forEach(ach => {
+        const unlocked = ach.check();
+        const div = document.createElement("div");
+        div.className = `badge-item ${unlocked ? "unlocked" : ""}`;
+        div.innerHTML = `
+            <div class="badge-icon">${ach.icon}</div>
+            <div class="badge-info">
+                <h4>${ach.title} ${unlocked ? "✅" : "🔒"}</h4>
+                <p>${ach.desc}</p>
+            </div>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function updateDashboardStats() {
+    document.getElementById("gamesPlayed").textContent = gamesPlayed;
+    document.getElementById("bestScore").textContent = bestScore;
+    document.getElementById("dashboardXP").textContent = xp;
+    document.getElementById("totalXP").textContent = xp;
+    
     const rank = getRank();
+    document.getElementById("sidebarRank").textContent = rank.icon + " " + rank.name;
+    document.getElementById("currentRankTitle").textContent = rank.icon + " " + rank.name;
+    
     const nextRank = ranks.find(r => r.xp > xp);
-
-    const totalXP = document.getElementById("totalXP");
-    const currentRank = document.getElementById("currentRank");
     const progress = document.getElementById("xpProgress");
-    const next = document.getElementById("nextRank");
+    
+    if (nextRank) {
+        const percentage = ((xp - rank.xp) / (nextRank.xp - rank.xp)) * 100;
+        progress.style.width = Math.min(100, Math.max(0, percentage)) + "%";
+        document.getElementById("nextRankText").textContent = (nextRank.xp - xp) + " XP until " + nextRank.name;
+    } else {
+        progress.style.width = "100%";
+        document.getElementById("nextRankText").textContent = "MAX RANK REACHED!";
+    }
+    renderBadges();
+}
 
-    if (totalXP) totalXP.textContent = xp;
-    if (currentRank) currentRank.textContent = rank.icon + " " + rank.name;
+function hideAllViews() {
+    document.querySelectorAll(".view-panel").forEach(panel => panel.classList.add("hidden"));
+}
 
-    if (progress) {
-        const percentage = nextRank
-            ? ((xp - rank.xp) / (nextRank.xp - rank.xp)) * 100
-            : 100;
-        progress.style.width = percentage + "%";
+function showHub() {
+    stopTimer();
+    gameOver = true;
+    hideAllViews();
+    document.getElementById("hubView").classList.remove("hidden");
+    updateDashboardStats();
+}
+
+function showProfile() {
+    stopTimer();
+    gameOver = true;
+    hideAllViews();
+    document.getElementById("profileView").classList.remove("hidden");
+    renderProfile();
+}
+
+function renderProfile() {
+    const rank = getRank();
+    const streakDays = localStorage.getItem("geoMasterStreak") || 1;
+    document.getElementById("profileUsernameDisplay").textContent = currentUsername;
+    document.getElementById("profileRankName").textContent = rank.icon + " " + rank.name + ` (🔥 ${streakDays}d Streak)`;
+    document.getElementById("profileTitleTag").textContent = equippedTitle;
+    document.getElementById("profileXP").textContent = xp;
+    document.getElementById("profileGames").textContent = gamesPlayed;
+    document.getElementById("profileBest").textContent = bestScore;
+
+    const imgElement = document.getElementById("profileAvatarImg");
+    const iconElement = document.getElementById("profileAvatarIcon");
+
+    if (customAvatar) {
+        imgElement.src = customAvatar;
+        imgElement.style.display = "block";
+        iconElement.style.display = "none";
+    } else {
+        imgElement.style.display = "none";
+        iconElement.style.display = "block";
+        iconElement.textContent = "🌍";
     }
 
-    if (next) {
-        next.textContent = nextRank
-            ? (nextRank.xp - xp) + " XP until " + nextRank.name
-            : "MAX RANK REACHED!";
+    document.getElementById("profileBadgesCount").textContent = `${achievements.filter(ach => ach.check()).length} / ${achievements.length}`;
+
+    const historyList = document.getElementById("matchHistoryList");
+    if (historyList) {
+        if (matchHistory.length === 0) {
+            historyList.innerHTML = `<p style="font-size: 11px; color: #8f98a0;">No matches played yet. Jump into a game!</p>`;
+        } else {
+            historyList.innerHTML = "";
+            matchHistory.slice(-5).reverse().forEach(match => {
+                const item = document.createElement("div");
+                item.style.background = "#111419";
+                item.style.border = "1px solid #2a475e";
+                item.style.padding = "6px 10px";
+                item.style.borderRadius = "4px";
+                item.style.display = "flex";
+                item.style.justifyContent = "space-between";
+                item.style.fontSize = "12px";
+                item.innerHTML = `
+                    <span style="color: var(--accent-color);">${match.mode}</span>
+                    <span style="color: #ffffff;">Score: <strong>${match.score}</strong></span>
+                    <span style="color: #8f98a0; font-size: 10px;">${match.date}</span>
+                `;
+                historyList.appendChild(item);
+            });
+        }
     }
 }
 
-// ==========================================
-// UTILITY FUNCTIONS
-// ==========================================
-
-function shuffle(array) {
-    const result = [...array];
-    for (let i = result.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [result[i], result[j]] = [result[j], result[i]];
+function changeUsername() {
+    const newName = prompt("Enter your new Steam gamer tag / username:", currentUsername);
+    if (newName && newName.trim() !== "") {
+        currentUsername = newName.trim();
+        localStorage.setItem("geoMasterUsername", currentUsername);
+        renderProfile();
     }
-    return result;
 }
 
-function getRandomOptions(correct) {
-    const wrongAnswers = shuffle(
-        selectedCountries.filter(c => c.n !== correct.n)
-    ).slice(0, 3);
-    return shuffle([correct, ...wrongAnswers]);
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        customAvatar = e.target.result;
+        localStorage.setItem("geoMasterAvatar", customAvatar);
+        renderProfile();
+    };
+    reader.readAsDataURL(file);
 }
 
-function showCountryMap(country) {
-    const mapContainer = document.getElementById("countryMap");
-    mapContainer.style.display = "flex";
-    
-    // Primary source using your current implementation
-    const primaryUrl = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${country.code}/vector.svg`;
-    
-    mapContainer.innerHTML = `
-        <img 
-            id="dynamicMapImg"
-            src="${primaryUrl}" 
-            alt="Outline of ${country.n}"
-            style="max-width: 160px; max-height: 140px; width: auto; height: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));"
-            onerror="handleMapError(this, '${country.code}', '${country.n}')"
-        >
-    `;
-}
-
-// Fallback handler if a specific vector file fails to load
-function showCountryMap(country) {
-    const mapContainer = document.getElementById("countryMap");
-    mapContainer.style.display = "flex";
-    
-    
-    let mapUrl = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${country.code}/vector.svg`;
-    
-    if (country.code === 'xk') {
-        mapUrl = `https://upload.wikimedia.org/wikipedia/commons/e/e0/Kosovo_in_Europe_%28zoomed%29.svg`;
+function handleUrlUpload() {
+    const url = prompt("Enter the direct image URL from the internet:");
+    if (url && url.trim() !== "") {
+        customAvatar = url.trim();
+        localStorage.setItem("geoMasterAvatar", customAvatar);
+        renderProfile();
     }
-    
-    mapContainer.innerHTML = `
-        <img 
-            src="${mapUrl}" 
-            alt="Outline of ${country.n}"
-            style="max-width: 160px; max-height: 140px; width: auto; height: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));"
-            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'font-size:14px; color:#cbd5e1; text-align:center; padding:10px;\\'>🗺️ ${country.n} Outline Map</div>';"
-        >
-    `;
-
-    if (country.code === 'xk') {
-    mapUrl = `https://upload.wikimedia.org/wikipedia/commons/e/e0/Kosovo_in_Europe_%28zoomed%29.svg`;
-}
 }
 
-function showTextFallback(imgElement, countryName) {
-    imgElement.parentElement.innerHTML = `
-        <div style="font-size: 14px; color: #cbd5e1; text-align: center; padding: 20px;">
-            🗺️ Map outline for <strong>${countryName}</strong>
+function resetDefaultAvatar() {
+    customAvatar = "";
+    localStorage.removeItem("geoMasterAvatar");
+    renderProfile();
+}
+
+function showShop() {
+    stopTimer();
+    gameOver = true;
+    hideAllViews();
+    document.getElementById("shopView").classList.remove("hidden");
+    renderShop();
+}
+
+function showInventory() {
+    stopTimer();
+    gameOver = true;
+    hideAllViews();
+    document.getElementById("inventoryView").classList.remove("hidden");
+    renderInventory();
+}
+
+function renderShop() {
+    const grid = document.getElementById("shopGrid");
+    const shopXP = document.getElementById("shopXP");
+    if (!grid) return;
+    shopXP.textContent = xp;
+    grid.innerHTML = "";
+
+    shopItems.forEach(item => {
+        const isOwned = ownedItems.includes(item.id);
+        const isEquipped = (item.type === "theme" && equippedTheme === item.color) || 
+                           (item.type === "title" && equippedTitle === item.value);
+
+        let btnText = isOwned ? (isEquipped ? "Equipped ✓" : "Equip") : `Buy (${item.cost} XP)`;
+        let btnClass = isOwned ? (isEquipped ? "shop-btn equipped" : "shop-btn owned") : "shop-btn";
+
+        const div = document.createElement("div");
+        div.className = "shop-item";
+        div.innerHTML = `
+            <div class="shop-item-header">
+                <div class="shop-item-icon">${item.icon}</div>
+                <div class="shop-item-info">
+                    <h4>${item.name}</h4>
+                    <p>${item.desc}</p>
+                </div>
+            </div>
+            <button class="${btnClass}" onclick="handleShopAction('${item.id}', ${item.cost}, '${item.type}', '${item.color || item.value || ""}', '${item.className || ""}')">
+                ${btnText}
+            </button>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function renderInventory() {
+    const grid = document.getElementById("inventoryGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    const defaultDiv = document.createElement("div");
+    defaultDiv.className = "shop-item";
+    defaultDiv.innerHTML = `
+        <div class="shop-item-header">
+            <div class="shop-item-icon">🏠</div>
+            <div class="shop-item-info">
+                <h4>Default Steam Background</h4>
+                <p>Revert back to the default CSS styling and background.</p>
+            </div>
         </div>
+        <button class="shop-btn ${equippedClass === "" ? "equipped" : ""}" onclick="resetToDefaultTheme()">
+            ${equippedClass === "" ? "Equipped ✓" : "Revert"}
+        </button>
     `;
-}
-// ==========================================
-// GAME ENGINE & TIMERS
-// ==========================================
+    grid.appendChild(defaultDiv);
 
-function startGame(gameMode) {
-    mode = gameMode;
+    shopItems.filter(item => ownedItems.includes(item.id)).forEach(item => {
+        const isEquipped = (item.type === "theme" && equippedTheme === item.color) || 
+                           (item.type === "title" && equippedTitle === item.value);
+                           
+        const div = document.createElement("div");
+        div.className = "shop-item";
+        div.innerHTML = `
+            <div class="shop-item-header">
+                <div class="shop-item-icon">${item.icon}</div>
+                <div class="shop-item-info">
+                    <h4>${item.name}</h4>
+                    <p>${item.desc}</p>
+                </div>
+            </div>
+            <button class="shop-btn ${isEquipped ? "equipped" : ""}" onclick="handleShopAction('${item.id}', 0, '${item.type}', '${item.color || item.value || ""}', '${item.className || ""}')">
+                ${isEquipped ? "Equipped ✓" : "Equip"}
+            </button>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function handleShopAction(id, cost, type, value, className = "") {
+    if (!ownedItems.includes(id)) {
+        if (xp < cost) {
+            alert("❌ Not enough XP! Play more games to earn XP.");
+            return;
+        }
+        xp -= cost; 
+        localStorage.setItem("geoMasterXP", xp);
+        ownedItems.push(id);
+        localStorage.setItem("geoMasterOwned", JSON.stringify(ownedItems));
+        alert("🎉 Purchase successful! Equip your item from the Inventory tab.");
+    } else {
+        if (type === "theme") {
+            equippedTheme = value;
+            equippedClass = className;
+            localStorage.setItem("geoMasterTheme", equippedTheme);
+            localStorage.setItem("geoMasterThemeClass", equippedClass);
+            applyTheme();
+        } else if (type === "title") {
+            equippedTitle = value;
+            localStorage.setItem("geoMasterTitle", equippedTitle);
+        }
+    }
+    renderShop();
+    renderInventory();
+    updateDashboardStats();
+}
+
+function resetToDefaultTheme() {
+    equippedTheme = "#66c0f4";
+    equippedClass = "";
+    localStorage.removeItem("geoMasterTheme");
+    localStorage.removeItem("geoMasterThemeClass");
+    applyTheme();
+    renderInventory();
+}
+
+function applyTheme() {
+    document.body.className = "";
+    if (equippedClass) document.body.classList.add(equippedClass);
+    document.documentElement.style.setProperty("--accent-color", equippedTheme);
+}
+
+function startGame(mode) {
+    stopTimer();
+    currentMode = mode;
     score = 0;
+    botScore = 0;
+    lives = 3;
     questionNumber = 1;
-    answered = false;
     gameOver = false;
 
+    const checkboxes = document.querySelectorAll(".filter-section input[type='checkbox']");
+    const activeRegions = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+
+    selectedCountries = countries.filter(c => activeRegions.includes(c.r));
+    if (selectedCountries.length < 4) {
+        alert("⚠️ Please select at least one region with enough countries in the Hub dashboard!");
+        return;
+    }
+
+    questionDeck = [...selectedCountries].sort(() => Math.random() - 0.5).slice(0, questionLimit);
+
+    hideAllViews();
+    document.getElementById("gameView").classList.remove("hidden");
+
+    document.getElementById("livesBox").classList.toggle("hidden", mode !== "survival");
+    document.getElementById("botScoreBox").classList.toggle("hidden", mode !== "vsComputer");
+    document.getElementById("timerBox").classList.toggle("hidden", mode !== "timeAttack");
+
+    nextQuestion();
+}
+
+function nextQuestion() {
+    if (gameOver) return;
+    if (questionNumber > questionLimit || (currentMode === "survival" && lives <= 0)) {
+        endGame();
+        return;
+    }
+
+    answered = false;
+    document.getElementById("number").textContent = questionNumber;
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("botThinking").classList.add("hidden");
+
+    const flagDiv = document.getElementById("flag");
+    flagDiv.innerHTML = "";
+    document.getElementById("countryMap").innerHTML = "";
+
+    const pool = questionDeck.length > 0 ? questionDeck : selectedCountries;
+    correctCountry = pool[Math.floor(Math.random() * pool.length)];
+
+    let questionText = "";
+    let effectiveMode = currentMode.startsWith("campaign_") ? "country" : currentMode;
+
+    if (effectiveMode === "flag" || (effectiveMode === "random" && Math.random() > 0.5)) {
+        questionText = "Which country does this flag belong to?";
+        flagDiv.innerHTML = `<img src="https://flagcdn.com/w320/${correctCountry.code}.png" alt="Flag">`;
+    } else {
+        questionText = `What is the capital city of <strong>${correctCountry.n}</strong> ${correctCountry.f}?`;
+    }
+
+    document.getElementById("question").innerHTML = questionText;
+
+    let options = [correctCountry];
+    while (options.length < 4) {
+        const randomC = selectedCountries[Math.floor(Math.random() * selectedCountries.length)];
+        if (!options.includes(randomC)) options.push(randomC);
+    }
+    options.sort(() => Math.random() - 0.5);
+
+    const optionsGrid = document.getElementById("options");
+    optionsGrid.innerHTML = "";
+
+    options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        let isFlagQ = flagDiv.innerHTML !== "";
+        btn.textContent = isFlagQ ? opt.n : opt.c;
+        btn.onclick = () => selectOption(btn, opt, isFlagQ);
+        optionsGrid.appendChild(btn);
+    });
+
+    if (currentMode === "timeAttack") startTimer();
+    if (currentMode === "vsComputer") startBotSimulation();
+}
+
+function selectOption(button, chosenOpt, isFlagQ) {
+    if (answered || gameOver) return;
+    answered = true;
     stopTimer();
 
-    const regions = [
-        ...document.querySelectorAll(".regions input:checked")
-    ].map(input => input.value);
+    const correctVal = isFlagQ ? correctCountry.n : correctCountry.c;
+    const chosenVal = isFlagQ ? chosenOpt.n : chosenOpt.c;
+    const feedback = document.getElementById("feedback");
 
-    if (regions.length === 0) {
-        alert("Select at least one continent!");
-        return;
-    }
+    document.querySelectorAll(".option").forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === correctVal) btn.classList.add("correct");
+    });
 
-    selectedCountries = countries.filter(c => regions.includes(c.r));
-
-    if (selectedCountries.length < 4) {
-        alert("Select more continents or ensure at least 4 countries are available!");
-        return;
-    }
-
-    questionDeck = shuffle(selectedCountries).slice(
-        0,
-        mode === "timeAttack" ? selectedCountries.length : Math.min(questionLimit, selectedCountries.length)
-    );
-
-    document.getElementById("menu").classList.add("hidden");
-    document.getElementById("result").classList.add("hidden");
-    document.getElementById("game").classList.remove("hidden");
-
-    const timerBox = document.getElementById("timerBox");
-
-    if (mode === "timeAttack") {
-        timerBox.classList.remove("hidden");
-        timeLeft = 30;
-        updateTimer();
-        startTimer();
+    if (chosenVal === correctVal) {
+        score++;
+        document.getElementById("score").textContent = score;
+        feedback.style.color = "#10b981";
+        feedback.textContent = "✅ Correct! Great job.";
+        playCorrectSound();
     } else {
-        timerBox.classList.add("hidden");
+        button.classList.add("incorrect");
+        feedback.style.color = "#ef4444";
+        feedback.textContent = `❌ Incorrect! The correct answer was ${correctVal}.`;
+        playWrongSound();
+        if (currentMode === "survival") {
+            lives--;
+            document.getElementById("lives").textContent = lives;
+        }
     }
 
-    updateXPDisplay();
-    nextQuestion();
+    questionNumber++;
+    setTimeout(() => nextQuestion(), 1500);
 }
 
 function startTimer() {
     stopTimer();
+    timeLeft = 15;
+    document.getElementById("timer").textContent = timeLeft;
+
     timerInterval = setInterval(() => {
-        if (gameOver) {
-            stopTimer();
-            return;
-        }
-
         timeLeft--;
-        updateTimer();
-
+        document.getElementById("timer").textContent = timeLeft;
         if (timeLeft <= 0) {
-            finishGame();
+            stopTimer();
+            handleTimeout();
         }
     }, 1000);
 }
 
 function stopTimer() {
-    if (timerInterval !== null) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    if (botTimeout) { clearTimeout(botTimeout); botTimeout = null; }
 }
 
-function updateTimer() {
-    const timer = document.getElementById("timer");
-    const box = document.getElementById("timerBox");
-    if (timer) timer.textContent = timeLeft;
-    if (box) box.classList.toggle("danger", timeLeft <= 10);
-}
-
-function nextQuestion() {
-    if (questionNumber > questionDeck.length) {
-        finishGame();
-        return;
-    }
-
-    answered = false;
-    correctCountry = questionDeck[questionNumber - 1];
-
-    document.getElementById("score").textContent = score;
-    document.getElementById("number").textContent = questionNumber;
-    document.getElementById("feedback").textContent = "";
-
-    const flagElement = document.getElementById("flag");
-    const questionElement = document.getElementById("question");
-    const optionsElement = document.getElementById("options");
-    const mapContainer = document.getElementById("countryMap");
-
-    flagElement.style.display = "flex";
-    flagElement.innerHTML = "";
-    mapContainer.style.display = "none";
-    mapContainer.innerHTML = "";
-
-    mapRequestNumber++;
-
-    questionElement.textContent = "";
-    optionsElement.innerHTML = "";
-
-    document.getElementById("next").style.display = "none";
-
-    const randomModes = ["flag", "capital", "country", "map"];
-    currentMode = mode;
-
-    if (mode === "random" || mode === "timeAttack") {
-        currentMode = randomModes[Math.floor(Math.random() * randomModes.length)];
-    }
-
-    const options = getRandomOptions(correctCountry);
-
-    if (currentMode === "flag") {
-        flagElement.style.display = "flex";
-        flagElement.innerHTML = `
-            <img
-                src="https://flagcdn.com/w320/${correctCountry.code}.png"
-                alt="${correctCountry.n} flag"
-            >
-        `;
-        questionElement.textContent = "Which country does this flag belong to?";
-    } else if (currentMode === "capital") {
-        flagElement.style.display = "none";
-        questionElement.textContent = "What is the capital of " + correctCountry.n + "?";
-    } else if (currentMode === "country") {
-        flagElement.style.display = "none";
-        questionElement.textContent = "This country is in " + correctCountry.r + ". Its capital is " + correctCountry.c + ". Which country is it?";
-    } else if (currentMode === "map") {
-        flagElement.style.display = "none";
-        questionElement.textContent = "Which country is shown on the map?";
-        showCountryMap(correctCountry);
-    }
-
-    options.forEach(country => {
-        const button = document.createElement("button");
-        button.className = "option";
-        button.textContent = (currentMode === "capital") ? country.c : country.n;
-        button.addEventListener("click", () => {
-            checkAnswer(country, button);
-        });
-        optionsElement.appendChild(button);
-    });
-}
-
-function checkAnswer(selectedCountry, buttonElement) {
-    if (answered) return;
+function handleTimeout() {
+    if (answered || gameOver) return;
     answered = true;
+    playWrongSound();
 
-    const allButtons = document.querySelectorAll(".options button");
-    allButtons.forEach(btn => btn.disabled = true);
-
-    const isCorrect = selectedCountry.n === correctCountry.n;
     const feedback = document.getElementById("feedback");
+    feedback.style.color = "#ef4444";
+    feedback.textContent = "⏰ Time's up!";
 
-    if (isCorrect) {
-        buttonElement.classList.add("correct");
-        score++;
-        feedback.textContent = "✅ Correct! +10 XP";
-        feedback.style.color = "#34d399";
-        addXP(10);
-        if (mode === "timeAttack") {
-            timeLeft += 5; // Bonus time
+    if (currentMode === "survival") {
+        lives--;
+        document.getElementById("lives").textContent = lives;
+    }
+
+    questionNumber++;
+    setTimeout(() => nextQuestion(), 1500);
+}
+
+function startBotSimulation() {
+    document.getElementById("botThinking").classList.remove("hidden");
+    botTimeout = setTimeout(() => {
+        if (answered || gameOver) return;
+        document.getElementById("botThinking").classList.add("hidden");
+        if (Math.random() < 0.75) {
+            botScore++;
+            document.getElementById("botScore").textContent = botScore;
         }
-    } else {
-        buttonElement.classList.add("incorrect");
-        feedback.textContent = `❌ Wrong! The correct answer was ${currentMode === "capital" ? correctCountry.c : correctCountry.n}.`;
-        feedback.style.color = "#f87171";
-        addXP(-5);
+    }, Math.random() * 2000 + 1000);
+}
 
-        // Highlight correct answer
-        allButtons.forEach(btn => {
-            if (btn.textContent === (currentMode === "capital" ? correctCountry.c : correctCountry.n)) {
-                btn.classList.add("correct");
+function endGame() {
+    gameOver = true;
+    stopTimer();
+    gamesPlayed++;
+    localStorage.setItem("geoMasterGames", gamesPlayed);
+
+    if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem("geoMasterBest", bestScore);
+    }
+
+    if (currentMode.startsWith("campaign_")) {
+        const currentRegionName = currentMode.replace("campaign_", "");
+        if (score >= 7) {
+            const currentIndex = campaignRegions.findIndex(r => r.name === currentRegionName);
+            if (currentIndex !== -1 && currentIndex + 1 < campaignRegions.length) {
+                const nextRegionName = campaignRegions[currentIndex + 1].name;
+                if (!unlockedRegions.includes(nextRegionName)) {
+                    unlockedRegions.push(nextRegionName);
+                    localStorage.setItem("geoMasterUnlockedRegions", JSON.stringify(unlockedRegions));
+                    setTimeout(() => alert(`🎉 Region Conquered! You unlocked ${nextRegionName}!`), 300);
+                }
             }
-        });
+        }
     }
 
-    document.getElementById("score").textContent = score;
+    const earnedXP = score * 25 + (currentMode.startsWith("campaign_") ? 50 : 10);
+    addXP(earnedXP);
 
-    if (mode === "timeAttack") {
-        questionNumber++;
-        setTimeout(() => {
-            if (!gameOver) nextQuestion();
-        }, 1200);
-    } else {
-        document.getElementById("next").style.display = "block";
-        questionNumber++;
-    }
-}
+    matchHistory.push({
+        mode: currentMode.replace("campaign_", "Campaign: "),
+        score: score,
+        date: new Date().toLocaleDateString()
+    });
+    localStorage.setItem("geoMasterHistory", JSON.stringify(matchHistory));
 
-function finishGame() {
-    if (gameOver) return;
-    gameOver = true;
-    stopTimer();
-
-    document.getElementById("game").classList.add("hidden");
-    document.getElementById("result").classList.remove("hidden");
-
-    document.getElementById("finalScore").textContent =
-        mode === "timeAttack"
-            ? score + " points"
-            : score + " / " + questionDeck.length;
-
-    let message;
-    if (mode === "timeAttack") {
-        message = "⏱️ Time is up! You scored " + score + " points!";
-    } else if (score === questionDeck.length) {
-        message = "🏆 PERFECT SCORE!";
-    } else if (score >= 8) {
-        message = "🌍 Amazing geography knowledge!";
-    } else if (score >= 6) {
-        message = "👏 Great job!";
-    } else {
-        message = "📚 Keep practicing!";
-    }
-
-    document.getElementById("finalMessage").textContent = message;
-    document.getElementById("finalXP").textContent = xp;
+    hideAllViews();
+    document.getElementById("resultView").classList.remove("hidden");
+    document.getElementById("finalScore").textContent = score;
+    document.getElementById("finalMessage").textContent = score >= 7 ? "🏆 Region Conquered!" : "👍 Good effort! Score 7+ to unlock the next region.";
+    document.getElementById("finalXP").textContent = `+${earnedXP} XP`;
     document.getElementById("finalRank").textContent = getRank().icon + " " + getRank().name;
-
-    updateXPDisplay();
-}
-
-function backToMenu() {
-    stopTimer();
-    gameOver = true;
-    mapRequestNumber++;
-
-    document.getElementById("game").classList.add("hidden");
-    document.getElementById("result").classList.add("hidden");
-    document.getElementById("menu").classList.remove("hidden");
-
-    updateXPDisplay();
 }
 
 function restartGame() {
-    startGame(mode);
+    hideAllViews();
+    if (currentMode.startsWith("campaign_")) {
+        showCampaignHub();
+    } else {
+        startGame(currentMode);
+    }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    updateXPDisplay();
+function startSpeedrunMode() {
+    stopTimer();
+    gameOver = false;
+    currentMode = "speedrun";
+    score = 0;
+    guessedCountries = [];
 
-    const nextBtn = document.getElementById("next");
-    if (nextBtn) {
-        nextBtn.addEventListener("click", nextQuestion);
+    hideAllViews();
+    document.getElementById("speedrunView").classList.remove("hidden");
+    document.getElementById("speedrunScore").textContent = "0";
+    document.getElementById("speedrunTotal").textContent = countries.length;
+    document.getElementById("guessedCountriesList").innerHTML = "";
+
+    const input = document.getElementById("countryTypeInput");
+    if (input) {
+        input.value = "";
+        input.focus();
+        input.onkeydown = function(e) {
+            if (e.key === "Enter") submitSpeedrunCountry(input.value.trim());
+        };
     }
 
-    console.log("🌍 GeoMaster loaded successfully!");
-    console.log("Total Countries Available:", countries.length);
+    speedrunTimeLeft = 300;
+    updateSpeedrunTimerDisplay();
+
+    if (speedrunTimerInterval) clearInterval(speedrunTimerInterval);
+    speedrunTimerInterval = setInterval(() => {
+        speedrunTimeLeft--;
+        updateSpeedrunTimerDisplay();
+        if (speedrunTimeLeft <= 0) {
+            clearInterval(speedrunTimerInterval);
+            endSpeedrun(false);
+        }
+    }, 1000);
+}
+
+function updateSpeedrunTimerDisplay() {
+    const mins = Math.floor(speedrunTimeLeft / 60);
+    const secs = speedrunTimeLeft % 60;
+    document.getElementById("speedrunTimer").textContent = `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+}
+
+function submitSpeedrunCountry(guess) {
+    if (!guess || gameOver) return;
+    const input = document.getElementById("countryTypeInput");
+    if (input) input.value = "";
+
+    const matched = countries.find(c => c.n.toLowerCase() === guess.toLowerCase());
+    if (matched && !guessedCountries.includes(matched.n)) {
+        guessedCountries.push(matched.n);
+        score++;
+        document.getElementById("speedrunScore").textContent = score;
+        playCorrectSound();
+
+        const list = document.getElementById("guessedCountriesList");
+        const tag = document.createElement("span");
+        tag.className = "guessed-tag";
+        tag.innerHTML = `${matched.f} ${matched.n}`;
+        list.appendChild(tag);
+
+        if (score === countries.length) {
+            clearInterval(speedrunTimerInterval);
+            endSpeedrun(true);
+        }
+    }
+}
+
+function endSpeedrun(completed) {
+    gameOver = true;
+    if (speedrunTimerInterval) clearInterval(speedrunTimerInterval);
+
+    gamesPlayed++;
+    localStorage.setItem("geoMasterGames", gamesPlayed);
+
+    if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem("geoMasterBest", bestScore);
+    }
+
+    const earnedXP = score * 10;
+    addXP(earnedXP);
+    matchHistory.push({ mode: "Country Typewriter", score: score, date: new Date().toLocaleDateString() });
+    localStorage.setItem("geoMasterHistory", JSON.stringify(matchHistory));
+
+    hideAllViews();
+    document.getElementById("resultView").classList.remove("hidden");
+    document.getElementById("finalScore").textContent = `${score} / ${countries.length}`;
+    document.getElementById("finalMessage").textContent = completed ? "🎉 Incredible! You named every country!" : "⏱️ Time's up!";
+    document.getElementById("finalXP").textContent = `+${earnedXP} XP`;
+    document.getElementById("finalRank").textContent = getRank().icon + " " + getRank().name;
+}
+
+function showCampaignHub() {
+    stopTimer();
+    gameOver = true;
+    hideAllViews();
+    document.getElementById("campaignView").classList.remove("hidden");
+    renderCampaignGrid();
+}
+
+function renderCampaignGrid() {
+    const grid = document.getElementById("campaignRegionsGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    campaignRegions.forEach(region => {
+        const isUnlocked = unlockedRegions.includes(region.name);
+        const div = document.createElement("div");
+        div.style.background = "#111419";
+        div.style.border = "1px solid " + (isUnlocked ? "#2a475e" : "#451a03");
+        div.style.padding = "15px";
+        div.style.borderRadius = "6px";
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.style.opacity = isUnlocked ? "1" : "0.6";
+
+        div.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 30px;">${region.icon}</span>
+                <div>
+                    <h4 style="color: #ffffff; font-size: 15px; margin-bottom: 3px;">${region.name} ${isUnlocked ? "✅" : "🔒"}</h4>
+                    <p style="color: #8f98a0; font-size: 11px;">${region.desc}</p>
+                    ${!isUnlocked ? `<span style="color: #f87171; font-size: 10px;">Locked (Score 7+ on previous region)</span>` : ""}
+                </div>
+            </div>
+            <button class="action-btn ${isUnlocked ? "success" : "secondary"}" style="width: auto; padding: 8px 16px; font-size: 12px;" ${isUnlocked ? `onclick="startCampaignRegion('${region.name}')"` : "disabled"}>
+                ${isUnlocked ? "Conquer ⚔️" : "Locked"}
+            </button>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function startCampaignRegion(regionName) {
+    currentMode = "campaign_" + regionName;
+    score = 0;
+    questionNumber = 1;
+    lives = 3;
+    gameOver = false;
+
+    selectedCountries = countries.filter(c => c.r === regionName);
+    questionDeck = [...selectedCountries].sort(() => Math.random() - 0.5).slice(0, 10);
+
+    hideAllViews();
+    document.getElementById("gameView").classList.remove("hidden");
+    document.getElementById("livesBox").classList.add("hidden");
+    document.getElementById("botScoreBox").classList.add("hidden");
+    document.getElementById("timerBox").classList.add("hidden");
+    nextQuestion();
+}
+
+let hopChain = [];
+let currentHopCountryObj = null;
+
+function startBorderHopperMode() {
+    stopTimer();
+    gameOver = false;
+    currentMode = "borderHopper";
+    score = 0;
+    hopChain = [];
+
+    currentHopCountryObj = countries[Math.floor(Math.random() * countries.length)];
+    hopChain.push(currentHopCountryObj.n);
+
+    hideAllViews();
+    document.getElementById("borderHopView").classList.remove("hidden");
+    
+    document.getElementById("hopScore").textContent = "0";
+    document.getElementById("currentHopCountry").textContent = currentHopCountryObj.n;
+    document.getElementById("hopFlag").textContent = currentHopCountryObj.f;
+    document.getElementById("hopCountryName").textContent = `${currentHopCountryObj.n} (Capital: ${currentHopCountryObj.c})`;
+
+    const historyList = document.getElementById("hopHistoryList");
+    if (historyList) {
+        historyList.innerHTML = `<span class="guessed-tag">${currentHopCountryObj.f} ${currentHopCountryObj.n}</span>`;
+    }
+
+    const input = document.getElementById("borderHopInput");
+    if (input) {
+        input.value = "";
+        input.focus();
+        input.onkeydown = function(e) {
+            if (e.key === "Enter") submitBorderHop(input.value.trim());
+        };
+    }
+}
+
+function submitBorderHop(guess) {
+    if (!guess || gameOver) return;
+    const input = document.getElementById("borderHopInput");
+    if (input) input.value = "";
+
+    const matchedCountry = countries.find(c => c.n.toLowerCase() === guess.toLowerCase());
+    if (!matchedCountry) {
+        alert(`❌ "${guess}" is not a recognized country name!`);
+        return;
+    }
+
+    if (hopChain.map(s => s.toLowerCase()).includes(matchedCountry.n.toLowerCase())) {
+        alert(`⚠️ You already visited ${matchedCountry.n} on this run!`);
+        return;
+    }
+
+    const allowedBorders = (countryBorders[currentHopCountryObj.n] || []).map(b => b.toLowerCase());
+    if (!allowedBorders.includes(matchedCountry.n.toLowerCase())) {
+        alert(`❌ ${matchedCountry.n} does not border ${currentHopCountryObj.n}!`);
+        return;
+    }
+
+    score++;
+    hopChain.push(matchedCountry.n);
+    currentHopCountryObj = matchedCountry;
+
+    document.getElementById("hopScore").textContent = score;
+    document.getElementById("currentHopCountry").textContent = currentHopCountryObj.n;
+    document.getElementById("hopFlag").textContent = currentHopCountryObj.f;
+    document.getElementById("hopCountryName").textContent = `${currentHopCountryObj.n} (Capital: ${currentHopCountryObj.c})`;
+
+    const historyList = document.getElementById("hopHistoryList");
+    if (historyList) {
+        const tag = document.createElement("span");
+        tag.className = "guessed-tag";
+        tag.innerHTML = `${matchedCountry.f} ${matchedCountry.n}`;
+        historyList.appendChild(tag);
+    }
+}
+
+function endBorderHopper() {
+    gameOver = true;
+    gamesPlayed++;
+    localStorage.setItem("geoMasterGames", gamesPlayed);
+
+    if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem("geoMasterBest", bestScore);
+    }
+
+    const earnedXP = score * 20;
+    addXP(earnedXP);
+    matchHistory.push({ mode: "Border Hopper", score: score, date: new Date().toLocaleDateString() });
+    localStorage.setItem("geoMasterHistory", JSON.stringify(matchHistory));
+
+    hideAllViews();
+    document.getElementById("resultView").classList.remove("hidden");
+    document.getElementById("finalScore").textContent = score;
+    document.getElementById("finalMessage").textContent = `Great border hop run! Chained ${score} countries.`;
+    document.getElementById("finalXP").textContent = `+${earnedXP} XP`;
+    document.getElementById("finalRank").textContent = getRank().icon + " " + getRank().name;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    applyTheme();
+    checkDailyLogin();
+    updateDashboardStats();
 });

@@ -3,83 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoMaster</title>
+    <title>GeoMaster - Steam Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+<div class="steam-container">
 
-    <header>
-        <h1>🌍 GeoMaster</h1>
-        <p>Explore the world. Master geography.</p>
-    </header>
-
-    <section id="menu" class="panel">
-        <h2>Choose Your Challenge</h2>
-
-        <div class="regions">
-            <label><input type="checkbox" value="Europe" checked> Europe</label>
-            <label><input type="checkbox" value="Asia" checked> Asia</label>
-            <label><input type="checkbox" value="North America" checked> North America</label>
-            <label><input type="checkbox" value="South America" checked> South America</label>
-            <label><input type="checkbox" value="Africa" checked> Africa</label>
+    <!-- LEFT SIDEBAR (Steam Client Style) -->
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>🌍 GeoMaster</h2>
+            <span class="client-tag">CLIENT v3.3</span>
         </div>
 
-        <div class="mode-grid">
-            <button onclick="startGame('flag')">🚩 Flag Quiz</button>
-            <button onclick="startGame('capital')">🏙️ Capital Quiz</button>
-            <button onclick="startGame('country')">🌎 Country Quiz</button>
-            <button onclick="startGame('map')">🗺️ Map Quiz</button>
-            <button onclick="startGame('random')">🎲 Random Mode</button>
-            <button onclick="startGame('timeAttack')">⏱️ Time Attack</button>
+        <div class="nav-group">
+            <div class="nav-title">Overview</div>
+            <button class="nav-item active" onclick="showHub()">🏠 Hub Dashboard</button>
+            <button class="nav-item" onclick="showProfile()">👤 Profile</button>
         </div>
 
-        <div class="rank-panel">
-            <h3 id="currentRank">🌱 Beginner</h3>
-            <p>Total XP: <span id="totalXP">0</span></p>
-            <div class="xp-track">
-                <div id="xpProgress"></div>
+        <div class="nav-group">
+            <div class="nav-title">Installed Games</div>
+            <button class="nav-item" onclick="startGame('flag')">🚩 Flag Quiz</button>
+            <button class="nav-item" onclick="startGame('capital')">🏙️ Capital Quiz</button>
+            <button class="nav-item" onclick="startGame('country')">🌎 Country Quiz</button>
+            <button class="nav-item" onclick="startGame('map')">🗺️ Map Quiz</button>
+            <button class="nav-item" onclick="startGame('random')">🎲 Random Mode</button>
+            <button class="nav-item time-attack" onclick="startGame('timeAttack')">⏱️ Time Attack</button>
+            <button class="nav-item time-attack" onclick="startGame('vsComputer')">🤖 vs Bot Match</button>
+            <button class="nav-item time-attack" onclick="startGame('survival')">💀 Hardcore Survival</button>
+            <button class="nav-item time-attack" onclick="startSpeedrunMode()">⚡ Country Typewriter</button>
+            <button class="nav-item time-attack" onclick="showCampaignHub()">🗺️ Continent Conquest</button>
+            <button class="nav-item time-attack" onclick="startBorderHopperMode()">🌐 Border Hopper</button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-title">Store & Locker</div>
+            <button class="nav-item" onclick="showShop()">🛒 Cosmetics Shop</button>
+            <button class="nav-item" onclick="showInventory()">🎒 My Inventory</button>
+        </div>
+
+        <div class="nav-group" style="margin-top: 10px;">
+            <div class="nav-title">Settings</div>
+            <button class="nav-item" id="soundToggleBtn" onclick="toggleSound()">🔊 Sound: ON</button>
+            <button class="nav-item" id="bgmToggleBtn" onclick="toggleBGM()">🎵 BGM: OFF</button>
+        </div>
+
+        <div class="sidebar-footer">
+            <div id="sidebarRank" class="sidebar-rank">🌱 Beginner</div>
+            <div class="sidebar-xp">XP: <span id="totalXP">0</span></div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="content-area">
+
+        <!-- HUB VIEW -->
+        <section id="hubView" class="view-panel">
+            <header class="content-header">
+                <h1>Game Hub</h1>
+                <p>Track your global statistics, achievements, and jump straight into a challenge.</p>
+            </header>
+
+            <div class="dashboard-stats">
+                <div class="stat-box">
+                    <span class="stat-num" id="gamesPlayed">0</span>
+                    <span class="stat-lbl">Games Played</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num" id="bestScore">0</span>
+                    <span class="stat-lbl">Best Score</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num" id="dashboardXP">0</span>
+                    <span class="stat-lbl">Total XP</span>
+                </div>
             </div>
-            <p id="nextRank"></p>
-        </div>
-    </section>
 
-    <section id="game" class="panel hidden">
-
-        <div class="game-stats">
-            <div>⭐ Score: <span id="score">0</span></div>
-            <div>❓ Question: <span id="number">1</span></div>
-            <div id="timerBox" class="hidden">
-                ⏱️ <span id="timer">30</span>s
+            <div class="filter-section">
+                <h3>🌍 Region Filters</h3>
+                <div class="regions">
+                    <label><input type="checkbox" value="Europe" checked> Europe</label>
+                    <label><input type="checkbox" value="Asia" checked> Asia</label>
+                    <label><input type="checkbox" value="North America" checked> North America</label>
+                    <label><input type="checkbox" value="South America" checked> South America</label>
+                    <label><input type="checkbox" value="Africa" checked> Africa</label>
+                </div>
             </div>
-        </div>
 
-        <div id="flag"></div>
+            <!-- ACHIEVEMENTS & BADGES SECTION -->
+            <div class="achievements-section" style="margin-top: 15px;">
+                <h3>🏅 Steam Achievements & Badges</h3>
+                <div class="badges-grid" id="badgesGrid"></div>
+            </div>
 
-        <div id="countryMap"></div>
+            <div class="rank-progress-card">
+                <div class="rank-info">
+                    <h3 id="currentRankTitle">🌱 Beginner</h3>
+                    <span id="nextRankText">Calculating progress...</span>
+                </div>
+                <div class="xp-track">
+                    <div id="xpProgress"></div>
+                </div>
+            </div>
+        </section>
 
-        <h2 id="question">Loading question...</h2>
+        <!-- PROFILE VIEW -->
+        <section id="profileView" class="view-panel hidden">
+            <header class="content-header">
+                <h1>👤 Player Profile & Match History</h1>
+                <p>Your personal identity, stats, and recent match logs.</p>
+            </header>
 
-        <div id="options" class="options"></div>
+            <div class="profile-card">
+                <div class="profile-avatar-area">
+                    <div class="profile-big-avatar" id="profileAvatarContainer">
+                        <img id="profileAvatarImg" src="" alt="Custom Avatar" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:10px;">
+                        <span id="profileAvatarIcon">🌍</span>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <h2 id="profileUsernameDisplay" style="color: #ffffff; font-size: 20px;">GeoMaster User</h2>
+                            <button class="action-btn secondary" onclick="changeUsername()" style="padding: 3px 8px; font-size: 10px; width: auto;">✏️ Edit</button>
+                        </div>
+                        <div style="margin-top: 4px;">
+                            <span id="profileRankName" style="color: var(--accent-color); font-weight: 600; font-size: 13px;">🌱 Beginner</span>
+                            <span class="profile-title-tag" id="profileTitleTag">Beginner Geographer</span>
+                        </div>
+                        <div class="avatar-upload-controls" style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+                            <label class="action-btn secondary" style="cursor: pointer; padding: 6px 12px; font-size: 11px; display: inline-block;">
+                                📁 Upload Photo <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                            </label>
+                            <button class="action-btn secondary" onclick="handleUrlUpload()" style="padding: 6px 12px; font-size: 11px;">🌐 Use Image URL</button>
+                            <button class="action-btn secondary" onclick="resetDefaultAvatar()" style="padding: 6px 12px; font-size: 11px;">🔄 Reset Default</button>
+                        </div>
+                    </div>
+                </div>
 
-        <h3 id="feedback"></h3>
+                <div class="profile-details-grid">
+                    <div class="profile-detail-box">
+                        <span class="detail-label">Total XP</span>
+                        <span class="detail-value" id="profileXP">0</span>
+                    </div>
+                    <div class="profile-detail-box">
+                        <span class="detail-label">Games Played</span>
+                        <span class="detail-value" id="profileGames">0</span>
+                    </div>
+                    <div class="profile-detail-box">
+                        <span class="detail-label">Best Score</span>
+                        <span class="detail-value" id="profileBest">0</span>
+                    </div>
+                    <div class="profile-detail-box">
+                        <span class="detail-label">Badges Unlocked</span>
+                        <span class="detail-value" id="profileBadgesCount">0 / 8</span>
+                    </div>
+                </div>
 
-        <button id="next" class="next-button">Next Question →</button>
+                <!-- RECENT MATCH HISTORY -->
+                <div class="achievements-section" style="margin-top: 10px;">
+                    <h3>📜 Recent Match History</h3>
+                    <div id="matchHistoryList" style="display: flex; flex-direction: column; gap: 6px; max-height: 160px; overflow-y: auto;">
+                        <p style="font-size: 11px; color: #8f98a0;">No matches played yet. Jump into a game!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <button onclick="backToMenu()" class="back-button">← Main Menu</button>
+        <!-- SHOP VIEW -->
+        <section id="shopView" class="view-panel hidden">
+            <header class="content-header">
+                <h1>🛒 GeoMaster Item Store</h1>
+                <p>Spend your XP on exclusive profile cosmetics and UI themes.</p>
+            </header>
 
-    </section>
+            <div class="shop-balance-card">
+                <div>Available XP Currency: <strong id="shopXP">0</strong> XP</div>
+            </div>
 
-    <section id="result" class="panel hidden">
-        <h2>🏆 Game Finished!</h2>
-        <h1 id="finalScore">0</h1>
-        <h3 id="finalMessage"></h3>
-        <p>Total XP: <span id="finalXP">0</span></p>
-        <p>Rank: <span id="finalRank"></span></p>
-        <button onclick="restartGame()">🔄 Play Again</button>
-        <button onclick="backToMenu()">Main Menu</button>
-    </section>
+            <div class="shop-grid" id="shopGrid"></div>
+        </section>
+
+        <!-- INVENTORY VIEW -->
+        <section id="inventoryView" class="view-panel hidden">
+            <header class="content-header">
+                <h1>🎒 My Inventory & Locker</h1>
+                <p>Manage and equip all the cosmetics you have successfully unlocked or purchased.</p>
+            </header>
+
+            <div class="shop-grid" id="inventoryGrid"></div>
+        </section>
+
+        <!-- CAMPAIGN VIEW -->
+        <section id="campaignView" class="view-panel hidden">
+            <header class="content-header">
+                <h1>🗺️ Continent Conquest Campaign</h1>
+                <p>Conquer the world continent by continent! Clear each region to unlock the next.</p>
+            </header>
+
+            <div id="campaignRegionsGrid" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;"></div>
+
+            <div class="game-actions" style="margin-top: 15px;">
+                <button onclick="showHub()" class="action-btn secondary">← Back to Hub</button>
+            </div>
+        </section>
+
+        <!-- GAMEPLAY VIEW -->
+        <section id="gameView" class="view-panel hidden">
+            <div class="game-stats-bar">
+                <div>⭐ Score: <span id="score">0</span></div>
+                <div id="botScoreBox" class="hidden" style="color: #ff9f43;">🤖 Bot: <span id="botScore">0</span></div>
+                <div id="livesBox" class="hidden" style="color: #f87171;">❤️ Lives: <span id="lives">3</span></div>
+                <div>❓ Question: <span id="number">1</span></div>
+                <div id="timerBox" class="hidden">⏱️ <span id="timer">30</span>s</div>
+            </div>
+
+            <div id="flag"></div>
+            <div id="countryMap"></div>
+
+            <h2 id="question">Loading question...</h2>
+            <div id="botThinking" class="hidden" style="text-align: center; color: #ff9f43; font-size: 12px; margin-bottom: 6px; font-style: italic;">🤖 Bot is thinking...</div>
+
+            <div id="options" class="options-grid"></div>
+
+            <h3 id="feedback" style="margin-top: 15px; font-size: 15px; text-align: center;"></h3>
+
+            <div class="game-actions" style="margin-top: 20px;">
+                <button onclick="showHub()" class="action-btn secondary">← Back to Hub</button>
+            </div>
+        </section>
+
+        <!-- SPEEDRUN VIEW -->
+        <section id="speedrunView" class="view-panel hidden">
+            <header class="content-header">
+                <h1>⚡ Country Typewriter Speedrun</h1>
+                <p>Type as many world countries as you can before the 5-minute timer runs out!</p>
+            </header>
+
+            <div class="game-stats-bar">
+                <div>🎯 Found: <span id="speedrunScore">0</span> / <span id="speedrunTotal">0</span></div>
+                <div style="color: #ff9f43;">⏱️ Time Left: <span id="speedrunTimer">5:00</span></div>
+            </div>
+
+            <div style="margin: 15px 0;">
+                <input type="text" id="countryTypeInput" placeholder="Type a country name and press Enter..." autocomplete="off">
+            </div>
+
+            <div class="achievements-section" style="flex-grow: 1; overflow-y: auto; max-height: 380px;">
+                <h3>🌍 Guessed Countries</h3>
+                <div id="guessedCountriesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top: 15px;">
+                <button onclick="endSpeedrun(true)" class="action-btn secondary">🏁 Give Up / Finish</button>
+            </div>
+        </section>
+
+        <!-- BORDER HOPPER VIEW -->
+        <section id="borderHopView" class="view-panel hidden">
+            <header class="content-header">
+                <h1>🌐 Border Hopper Mode</h1>
+                <p>Name a country that borders the current country to keep the chain alive!</p>
+            </header>
+
+            <div class="game-stats-bar">
+                <div>🔗 Chain Streak: <span id="hopScore">0</span></div>
+                <div style="color: #ff9f43;">🎯 Current Country: <strong id="currentHopCountry" style="color: #fff;">-</strong></div>
+            </div>
+
+            <div style="text-align: center; margin: 15px 0;">
+                <div id="hopFlag" style="font-size: 50px; margin-bottom: 6px;">🏳️</div>
+                <h2 id="hopCountryName" style="color: #ffffff; font-size: 22px;">Loading...</h2>
+            </div>
+
+            <div style="margin: 10px 0;">
+                <input type="text" id="borderHopInput" placeholder="Type a bordering country and press Enter..." autocomplete="off">
+            </div>
+
+            <div class="achievements-section" style="flex-grow: 1; overflow-y: auto; max-height: 220px;">
+                <h3>📜 Route History</h3>
+                <div id="hopHistoryList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
+            </div>
+
+            <div class="game-actions" style="margin-top: 15px;">
+                <button onclick="endBorderHopper()" class="action-btn secondary">🏁 End Run</button>
+            </div>
+        </section>
+
+        <!-- RESULT VIEW -->
+        <section id="resultView" class="view-panel hidden">
+            <div class="result-card">
+                <h2>🏆 Mission Accomplished</h2>
+                <h1 id="finalScore">0</h1>
+                <h3 id="finalMessage"></h3>
+                <p>Earned XP: <span id="finalXP">0</span></p>
+                <p>Rank: <span id="finalRank"></span></p>
+                <div class="result-actions">
+                    <button onclick="restartGame()" class="action-btn success">🔄 Play Again</button>
+                    <button onclick="showHub()" class="action-btn secondary">Return to Hub</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
 </div>
 
