@@ -319,7 +319,6 @@ let gamesPlayed = Number(localStorage.getItem("geoMasterGames")) || 0;
 let bestScore = Number(localStorage.getItem("geoMasterBest")) || 0;
 let matchHistory = JSON.parse(localStorage.getItem("geoMasterHistory")) || [];
 
-// Continent Conquest Unlocked Regions (Europe unlocked by default)
 let unlockedRegions = JSON.parse(localStorage.getItem("geoMasterUnlockedRegions")) || ["Europe"];
 
 const campaignRegions = [
@@ -358,13 +357,19 @@ const shopItems = [
     { id: "theme_emerald", name: "Emerald Matrix Theme", desc: "Changes accent and background to green.", cost: 100, type: "theme", color: "#10b981", className: "theme-emerald", icon: "🟢" },
     { id: "theme_cyber", name: "Cyberpunk Neon Theme", desc: "Changes accent and background to neon gold.", cost: 250, type: "theme", color: "#f59e0b", className: "theme-cyber", icon: "⚡" },
     { id: "theme_crimson", name: "Crimson Red Theme", desc: "Changes accent and background to dark red.", cost: 350, type: "theme", color: "#ef4444", className: "theme-crimson", icon: "🔴" },
-    { id: "title_master", name: "Title: 'Cartographer'", desc: "Unlocks an exclusive profile title.", cost: 500, type: "title", value: "Cartographer", icon: "📜" }
+    { id: "theme_midnight", name: "Midnight Cyber Theme", desc: "Sleek dark blue and purple neon aesthetic.", cost: 400, type: "theme", color: "#a855f7", className: "theme-midnight", icon: "🌌" },
+    { id: "theme_sunset", name: "Sunset Orange Theme", desc: "Warm orange and gold Steam gradient.", cost: 450, type: "theme", color: "#f97316", className: "theme-sunset", icon: "🌅" },
+    { id: "title_master", name: "Title: 'Cartographer'", desc: "Unlocks an exclusive profile title.", cost: 500, type: "title", value: "Cartographer", icon: "📜" },
+    { id: "title_globetrotter", name: "Title: 'Globetrotter'", desc: "Shows off your elite world traveler status.", cost: 600, type: "title", value: "Globetrotter", icon: "✈️" },
+    { id: "title_speedrunner", name: "Title: 'Speed Demon'", desc: "For masters of the Country Typewriter mode.", cost: 750, type: "title", value: "Speed Demon", icon: "⚡" },
+    { id: "avatar_frame_gold", name: "Gold Avatar Border", desc: "Adds a shiny glowing gold border around your avatar.", cost: 1000, type: "frame", value: "gold-frame", icon: "👑" }
 ];
 
 let ownedItems = JSON.parse(localStorage.getItem("geoMasterOwned")) || [];
 let equippedTheme = localStorage.getItem("geoMasterTheme") || "#66c0f4";
 let equippedClass = localStorage.getItem("geoMasterThemeClass") || "";
 let equippedTitle = localStorage.getItem("geoMasterTitle") || "Beginner Geographer";
+let equippedFrame = localStorage.getItem("geoMasterFrame") || "";
 let currentUsername = localStorage.getItem("geoMasterUsername") || "GeoMaster User";
 let customAvatar = localStorage.getItem("geoMasterAvatar") || "";
 
@@ -416,10 +421,10 @@ function startAmbientBGM() {
         bgmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         const chordFrequencies = [
-            [130.81, 196.00, 261.63], // C3, G3, C4
-            [110.00, 164.81, 220.00], // A2, E3, A3
-            [146.83, 220.00, 293.66], // D3, A3, D4
-            [98.00, 146.83, 196.00]   // G2, D3, G3
+            [130.81, 196.00, 261.63],
+            [110.00, 164.81, 220.00],
+            [146.83, 220.00, 293.66],
+            [98.00, 146.83, 196.00]
         ];
 
         let chordIndex = 0;
@@ -663,6 +668,8 @@ function renderProfile() {
         iconElement.textContent = "🌍";
     }
 
+    applyFrame(equippedFrame);
+
     document.getElementById("profileBadgesCount").textContent = `${achievements.filter(ach => ach.check()).length} / ${achievements.length}`;
 
     const historyList = document.getElementById("matchHistoryList");
@@ -674,7 +681,6 @@ function renderProfile() {
             matchHistory.slice(-5).reverse().forEach(match => {
                 const item = document.createElement("div");
                 item.style.background = "#111419";
-                item.style.border = "1px solid #2a475e";
                 item.style.padding = "6px 10px";
                 item.style.borderRadius = "4px";
                 item.style.display = "flex";
@@ -753,7 +759,8 @@ function renderShop() {
     shopItems.forEach(item => {
         const isOwned = ownedItems.includes(item.id);
         const isEquipped = (item.type === "theme" && equippedTheme === item.color) || 
-                           (item.type === "title" && equippedTitle === item.value);
+                           (item.type === "title" && equippedTitle === item.value) ||
+                           (item.type === "frame" && equippedFrame === item.value);
 
         let btnText = isOwned ? (isEquipped ? "Equipped ✓" : "Equip") : `Buy (${item.cost} XP)`;
         let btnClass = isOwned ? (isEquipped ? "shop-btn equipped" : "shop-btn owned") : "shop-btn";
@@ -799,7 +806,8 @@ function renderInventory() {
 
     shopItems.filter(item => ownedItems.includes(item.id)).forEach(item => {
         const isEquipped = (item.type === "theme" && equippedTheme === item.color) || 
-                           (item.type === "title" && equippedTitle === item.value);
+                           (item.type === "title" && equippedTitle === item.value) ||
+                           (item.type === "frame" && equippedFrame === item.value);
                            
         const div = document.createElement("div");
         div.className = "shop-item";
@@ -840,11 +848,22 @@ function handleShopAction(id, cost, type, value, className = "") {
         } else if (type === "title") {
             equippedTitle = value;
             localStorage.setItem("geoMasterTitle", equippedTitle);
+        } else if (type === "frame") {
+            equippedFrame = value;
+            localStorage.setItem("geoMasterFrame", equippedFrame);
+            applyFrame(equippedFrame);
         }
     }
     renderShop();
     renderInventory();
     updateDashboardStats();
+}
+
+function applyFrame(frameClass) {
+    const avatarContainer = document.getElementById("profileAvatarContainer");
+    if (avatarContainer) {
+        avatarContainer.className = "profile-big-avatar " + (frameClass || "");
+    }
 }
 
 function resetToDefaultTheme() {
@@ -860,6 +879,18 @@ function applyTheme() {
     document.body.className = "";
     if (equippedClass) document.body.classList.add(equippedClass);
     document.documentElement.style.setProperty("--accent-color", equippedTheme);
+}
+
+// ==========================================
+// GAME CORE & ADVANCED RANDOMIZATION
+// ==========================================
+
+function fisherYatesShuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
 function startGame(mode) {
@@ -880,7 +911,7 @@ function startGame(mode) {
         return;
     }
 
-    questionDeck = [...selectedCountries].sort(() => Math.random() - 0.5).slice(0, questionLimit);
+    questionDeck = fisherYatesShuffle([...selectedCountries]).slice(0, questionLimit);
 
     hideAllViews();
     document.getElementById("gameView").classList.remove("hidden");
@@ -906,17 +937,40 @@ function nextQuestion() {
 
     const flagDiv = document.getElementById("flag");
     flagDiv.innerHTML = "";
-    document.getElementById("countryMap").innerHTML = "";
+    const mapDiv = document.getElementById("countryMap");
+    mapDiv.innerHTML = "";
 
     const pool = questionDeck.length > 0 ? questionDeck : selectedCountries;
-    correctCountry = pool[Math.floor(Math.random() * pool.length)];
+    
+    do {
+        correctCountry = pool[Math.floor(Math.random() * pool.length)];
+    } while (pool.length > 1 && correctCountry === window.lastCorrectCountry);
+    window.lastCorrectCountry = correctCountry;
 
     let questionText = "";
     let effectiveMode = currentMode.startsWith("campaign_") ? "country" : currentMode;
 
-    if (effectiveMode === "flag" || (effectiveMode === "random" && Math.random() > 0.5)) {
+    let chosenMode = effectiveMode;
+    if (effectiveMode === "random") {
+        const modes = ["flag", "map", "country", "capital"];
+        chosenMode = modes[Math.floor(Math.random() * modes.length)];
+    }
+
+    let isFlagQ = false;
+    let isMapQ = false;
+    let isCountryQ = false; 
+
+    if (chosenMode === "flag") {
+        isFlagQ = true;
         questionText = "Which country does this flag belong to?";
-        flagDiv.innerHTML = `<img src="https://flagcdn.com/w320/${correctCountry.code}.png" alt="Flag">`;
+        flagDiv.innerHTML = `<img src="https://flagcdn.com/w320/${correctCountry.code}.png" alt="Flag" style="max-height: 120px; border-radius: 4px;">`;
+    } else if (chosenMode === "map") {
+        isMapQ = true;
+        questionText = "Which country does this map outline belong to?";
+        mapDiv.innerHTML = `<img src="https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${correctCountry.code}/vector.svg" alt="Country Map" style="max-height: 160px; filter: drop-shadow(0 0 2px #fff);">`;
+    } else if (chosenMode === "country") {
+        isCountryQ = true;
+        questionText = `Which country has <strong>${correctCountry.c}</strong> as its capital city?`;
     } else {
         questionText = `What is the capital city of <strong>${correctCountry.n}</strong> ${correctCountry.f}?`;
     }
@@ -928,7 +982,7 @@ function nextQuestion() {
         const randomC = selectedCountries[Math.floor(Math.random() * selectedCountries.length)];
         if (!options.includes(randomC)) options.push(randomC);
     }
-    options.sort(() => Math.random() - 0.5);
+    options = fisherYatesShuffle(options);
 
     const optionsGrid = document.getElementById("options");
     optionsGrid.innerHTML = "";
@@ -936,9 +990,10 @@ function nextQuestion() {
     options.forEach(opt => {
         const btn = document.createElement("button");
         btn.className = "option";
-        let isFlagQ = flagDiv.innerHTML !== "";
-        btn.textContent = isFlagQ ? opt.n : opt.c;
-        btn.onclick = () => selectOption(btn, opt, isFlagQ);
+        
+        let showCountryName = isFlagQ || isMapQ || isCountryQ;
+        btn.textContent = showCountryName ? opt.n : opt.c;
+        btn.onclick = () => selectOption(btn, opt, showCountryName);
         optionsGrid.appendChild(btn);
     });
 
@@ -946,13 +1001,13 @@ function nextQuestion() {
     if (currentMode === "vsComputer") startBotSimulation();
 }
 
-function selectOption(button, chosenOpt, isFlagQ) {
+function selectOption(button, chosenOpt, isNameQ) {
     if (answered || gameOver) return;
     answered = true;
     stopTimer();
 
-    const correctVal = isFlagQ ? correctCountry.n : correctCountry.c;
-    const chosenVal = isFlagQ ? chosenOpt.n : chosenOpt.c;
+    const correctVal = isNameQ ? correctCountry.n : correctCountry.c;
+    const chosenVal = isNameQ ? chosenOpt.n : chosenOpt.c;
     const feedback = document.getElementById("feedback");
 
     document.querySelectorAll(".option").forEach(btn => {
@@ -1226,7 +1281,7 @@ function startCampaignRegion(regionName) {
     gameOver = false;
 
     selectedCountries = countries.filter(c => c.r === regionName);
-    questionDeck = [...selectedCountries].sort(() => Math.random() - 0.5).slice(0, 10);
+    questionDeck = fisherYatesShuffle([...selectedCountries]).slice(0, questionLimit);
 
     hideAllViews();
     document.getElementById("gameView").classList.remove("hidden");
@@ -1337,6 +1392,7 @@ function endBorderHopper() {
 
 window.addEventListener("DOMContentLoaded", () => {
     applyTheme();
+    applyFrame(equippedFrame);
     checkDailyLogin();
     updateDashboardStats();
 });

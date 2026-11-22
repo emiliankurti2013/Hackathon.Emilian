@@ -655,3 +655,17 @@ body.theme-crimson {
     background-color: #66c0f4;
     color: #171a21;
 }
+
+/* New Shop Themes & Frames */
+body.theme-midnight {
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
+}
+
+body.theme-sunset {
+    background: linear-gradient(135deg, #431407 0%, #18181b 100%) !important;
+}
+
+.profile-big-avatar.gold-frame {
+    border: 3px solid #f59e0b !important;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+}
